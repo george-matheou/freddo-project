@@ -1,0 +1,5 @@
+PARSEC Benchmark Suite
+Number of Simulations: 102400, Number of swaptions: 16 Port: 0 PeersFile: (null)
+Serial_Time: 6.078472
+Writing results to the file
+Writing results to the file: done

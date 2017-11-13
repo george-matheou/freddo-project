@@ -1,0 +1,33 @@
+##########################################################################################
+# This makefile contains variables and flags used for compiling the benchmarks			 #
+##########################################################################################
+
+#FREDDO_LIB_DIR		= /usr/local/lib
+#FREDDO_INC_DIR		= /usr/local/include/freddo
+
+FREDDO_LIB_DIR		=../../../install_freddo/lib
+FREDDO_INC_DIR		=../../../install_freddo/include
+
+# Extra flags to give to the C++ compiler
+LIBS_PATHS		= -L$(FREDDO_LIB_DIR)
+LIBS			= -lfreddo -pthread
+INCLUDES		= -I$(FREDDO_INC_DIR)
+
+# The compiler that will be used
+OPENMPI_PATH=/opt/openmpi2
+MVAPICH_PATH=/opt/mvapich2
+MPICH_PATH=/opt/mpich3
+
+CXX_openmpi		= $(OPENMPI_PATH)/bin/mpic++
+CXX_mvapich		= $(MVAPICH_PATH)/bin/mpic++
+CXX_mpich		= $(MPICH_PATH)/bin/mpic++
+CXX_mpidefault	= mpic++
+
+# Debug Flags
+DEB_FLAGS	 	= #-g
+#DEB_FLAGS 		+= -DTSU_COLLECT_STATISTICS
+
+# Test Flags
+TEST_FLAGS 		=  #-DTEST_DYNAMIC_SM
+
+CXXFLAGS 		= -Wall -DUSE_MPI_FREDDO -O3 -std=c++11 $(TEST_FLAGS) $(DEB_FLAGS) $(INCLUDES) $(LIBS_PATHS) $(LIBS)

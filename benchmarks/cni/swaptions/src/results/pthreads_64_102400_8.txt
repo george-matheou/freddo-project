@@ -1,0 +1,3 @@
+PARSEC Benchmark Suite
+Number of Simulations: 102400,  Number of threads: 8 Number of swaptions: 64
+PThreads_Time: 9.227862

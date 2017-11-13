@@ -1,0 +1,105 @@
+##################################################### Produce the Benchmarks #####################################################
+
+###### OPTIONS FOR MPI IMPLEMENTATIONS ###### 
+# make MPI_IMPL=mvapich
+# make MPI_IMPL=openmpi
+# make MPI_IMPL=mpich
+#############################################
+
+BENCH_DIR	 		= .
+BENCH_BIN			= $(BENCH_DIR)/bin
+
+############ Flags and Variables
+SHELL 		= /bin/bash
+RM			= rm -f --preserve-root
+MV 			= mv -f
+CP			= cp
+MAKE		= make
+SED 		= sed
+
+# Arg 1: The benchmark directory
+define build_app
+    $(MAKE) -C $1 $(net)
+    
+	@mkdir -p $(BENCH_BIN)/$1
+	
+	@$(CP) $1/bin/*  $(BENCH_BIN)/$1
+	@echo -e "==================="
+endef
+
+# Arg 1: The benchmark directory
+define clean_app
+	$(MAKE) -C $1 clean
+	$(RM) -r $(BENCH_BIN)/$1
+endef
+
+# Disable Makefile's built-in rules
+.SUFFIXES:
+.SECONDARY:
+
+# Set the default goal of this makefile
+.DEFAULT_GOAL := all
+
+bench_dirs= lu cholesky qr bmmult powerset fibonacci swaptions blackscholes
+
+ifndef net
+$(error net is not set. Use the following options: net=openmpi, net=mvapich, net=mpich, net=mpidefault)
+endif
+
+.PHONY: all
+all: $(bench_dirs)
+
+# Build the Blocked Matrix Multiplication Benchmark
+.PHONY: bmmult
+bmmult:
+	@echo -e "\nCreating -> " $@ 
+	$(call build_app,$@);
+
+# Build the Cholesky Benchmark
+.PHONY: cholesky
+cholesky:
+	@echo -e "\nCreating -> " $@ 
+	$(call build_app,$@);
+
+# Build the LU Benchmark
+.PHONY: lu
+lu:
+	@echo -e "\nCreating -> " $@ 
+	$(call build_app,$@);
+
+# Build the QR Benchmark
+.PHONY: qr
+qr:
+	@echo -e "\nCreating -> " $@ 
+	$(call build_app,$@);	
+	
+# Build the Powerset Benchmark
+.PHONY: powerset
+powerset:
+	@echo -e "\nCreating -> " $@ 
+	$(call build_app,$@);	
+
+# Build the Fibonacci Benchmark
+.PHONY: fibonacci
+fibonacci:	
+	@echo -e "\nCreating -> " $@ 
+	$(call build_app,$@);		
+
+# Build the Swaptions Benchmark
+.PHONY: swaptions
+swaptions: 	
+	@echo -e "\nCreating -> " $@ 
+	$(call build_app,$@);	
+
+# Build the Blackscholes Benchmark
+.PHONY: blackscholes
+blackscholes: 	
+	@echo -e "\nCreating -> " $@ 
+	$(call build_app,$@);	
+
+.PHONY: clean
+clean:
+	$(foreach bench,$(bench_dirs), $(call clean_app,$(bench)); )	
+	
+	$(RM) $(BENCH_DIR)/results/*.*
+	@echo -e "Benchmarks' Executables removed..."
