@@ -1,4 +1,4 @@
-# freddo-project (under construction)
+# freddo-project
 FREDDO is a software runtime, implemented in C++11, that provides data-driven concurrency on single-node and distributed multi-core systems. It is based on Data-Driven Multithreading [1-2], a hybrid control-flow/data-flow
 model that schedules threads based on data availability on sequential processors.
 
