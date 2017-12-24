@@ -9,7 +9,7 @@ In case you have any publications resulting from FREDDO, please cite the followi
 --->
   - G. Matheou and P. Evripidou, "FREDDO: an efficient framework for runtime execution of data-driven objects," Proceedings of the International Conference on Parallel and Distributed Processing Techniques and Applications (PDPTA), 2016. ISBN: 1-60132-444-8. [Online]. Available: http://worldcomp-proceedings.com/proc/p2016/PDP3458.pdf
 
-  - G. Matheou and P. Evripidou, "Data-Driven Concurrency for High Performance Computing," ACM Transactions on Architecture and Code Optimization (TACO) 14.4 (2017): 53.
+  - G. Matheou and P. Evripidou, "Data-Driven Concurrency for High Performance Computing," ACM Transactions on Architecture and Code Optimization (TACO) 14.4 (2017): 53. DOI: 10.1145/3162014
 
 <!---
 - Workshops:
