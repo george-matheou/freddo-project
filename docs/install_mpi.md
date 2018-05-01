@@ -1,6 +1,6 @@
 ## Install Open MPI
 * Download a version from: https://www.open-mpi.org/software/ompi/
-  * Note: In this example the Open MPI V3.0.1 will be installed
+  * `Note:` In this example the Open MPI V3.0.1 will be installed
 * Extract the archive file
   * tar -xvf openmpi-3.0.1.tar.gz
 * cd openmpi-3.0.1/
