@@ -4,3 +4,4 @@
 *.a
 install_freddo
 install_freddo/*
+benchmarks/cni/bin
