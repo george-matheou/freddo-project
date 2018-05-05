@@ -35,11 +35,12 @@
 #include "../../ddm_defs.h"
 #include "../../Error.h"
 #include <stdio.h>
-#include <boost/functional/hash.hpp>
+
 
 #if defined(USE_DYNAMIC_SM_UMAP)
 	#include <unordered_map>
 #else
+	#include <boost/functional/hash.hpp>
 	#include <boost/unordered_map.hpp>
 #endif
 

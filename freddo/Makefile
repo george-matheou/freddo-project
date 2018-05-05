@@ -19,35 +19,17 @@ include_dirs=Algorithm TSU TSU/SM TSU/SM/google Timer Distributed Distributed/cu
 
 .DEFAULT_GOAL :=
 
-# For the Custom network
-.PHONY:  cni
+# For Custom Network Interface support
+.PHONY: cni
 cni:
-	@echo "Creating the FREDDO framework with custom network"
+	@echo "Creating FREDDO with custom network interface"
 	$(MAKE) -C $(BUILD_PATH) -f Makefile.mk net=cni  
 
-# For the network using OpenMPI
-.PHONY: openmpi
-openmpi:
-	@echo "Creating the FREDDO framework with Open MPI"
-	$(MAKE) -C $(BUILD_PATH) -f Makefile.mk net=openmpi 
-
-# For the network using MVAPICH
-.PHONY: mvapich
-mvapich:
-	@echo "Creating the FREDDO framework with MVAPICH"
-	$(MAKE) -C $(BUILD_PATH) -f Makefile.mk net=mvapich 
-
-# For the network using MPICH
-.PHONY: mpich
-mpich:
-	@echo "Creating the FREDDO framework with MPICH"
-	$(MAKE) -C $(BUILD_PATH) -f Makefile.mk net=mpich
-
-# For the network using default mpi
-.PHONY: mpidefault
-mpidefault:
-	@echo "Creating the FREDDO framework with the default MPI (the one that is in the path)"
-	$(MAKE) -C $(BUILD_PATH) -f Makefile.mk net=mpidefault
+# For MPI support
+.PHONY: mpi
+mpi:
+	@echo "Creating FREDDO with MPI. MPI path: " $(MPI_PATH)
+	$(MAKE) -C $(BUILD_PATH) -f Makefile.mk net=mpi
 
 # For the Custom network
 .PHONY: clean

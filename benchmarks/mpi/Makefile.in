@@ -14,7 +14,7 @@ LIBS			= -lfreddo -pthread
 INCLUDES		= -I$(FREDDO_INC_DIR)
 
 # The compiler that will be used
-OPENMPI_PATH=/opt/openmpi2
+OPENMPI_PATH=/opt/openmpi3
 MVAPICH_PATH=/opt/mvapich2
 MPICH_PATH=/opt/mpich3
 

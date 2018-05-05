@@ -38,7 +38,7 @@
 //// Defines ////
 
 // The defines below used for implementing different implementations of Dynamic SM
-#define USE_DYNAMIC_SM_UMAP						// Use the std's unordered map
+#define USE_DYNAMIC_SM_UMAP					// Use the std's unordered map
 //#define USE_DYNAMIC_SM_BOOST_UMAP			// Use the boost's unordered map
 //#define USE_DYNAMIC_SM_BTREE_MAP			// Use the google's BTREE map
 
@@ -59,14 +59,15 @@ typedef enum {
 } Nesting;
 
 //// Defining Types ////
-typedef unsigned int TID;  // The type of the DThread's Identifier
-typedef unsigned int KernelID;  // The Kernel's Identifier. It is used as an argument in a DThread function.
-typedef unsigned short int ReadyCount;  // The type of the Ready Count attribute
-typedef double time_count;  // Indicates a time value
-typedef unsigned int UInt;  // Short name for unsigned integer
-typedef unsigned char Byte;  // The type of one byte
-typedef unsigned char* MemAddr;  // The Address of a memory cell
-typedef unsigned int AddrID;  // The type of the IDs of the Addresses
+typedef unsigned int 				TID;  			// The type of the DThread's Identifier
+typedef unsigned int 				KernelID;  		// The Kernel's Identifier. It is used as an argument in a DThread function.
+typedef unsigned short int 			ReadyCount;  	// The type of the Ready Count attribute
+typedef double 						time_count;  	// Indicates a time value
+typedef unsigned int 				UInt;  			// Short name for unsigned integer
+typedef unsigned char 				Byte;  			// The type of one byte
+typedef unsigned char				*MemAddr;  		// The Address of a memory cell
+typedef unsigned int 				AddrID;  		// The type of the IDs of the Addresses
+
 // The type of a Recursive Instance
 using RInstance = cntx_1D_t;
 
@@ -116,7 +117,7 @@ typedef struct {
 		size_t dataSize;
 		AddrID addrID;
 		size_t index;
-}ReceivedSegmentInfo;
+} ReceivedSegmentInfo;
 
 // This std::function is used to call a function when data is received for a GAS address
 using GASOnReceiveFunction = std::function<void*(ReceivedSegmentInfo&)>;
