@@ -39,10 +39,10 @@ FREDDO utilizes two different network interfaces for inter-node communication: *
 - Go to *./benchmarks/cni* directory
 - ```make clean```
 - ```make``` *(all benchmarks will be compiled and installed in bin directory)*
-- ```make <X>``` *(will compile and install the X benchmark, e.g. make fibonacci)*
+- make &lt;X&lt; *(will compile and install the X benchmark, e.g. ```make fibonacci```)*
 - Execute a benchmark
   - Example with LU
-    - Usage: ./bin/lu/luMain &lt;port&gt; &lt;matrix size&gt; &lt;block size&gt; &lt;run serial&gt; &lt;peer file&gt;
+    - Usage: ./bin/lu/luMain &lt;port&lt; &lt;matrix size&gt; &lt;block size&gt; &lt;run serial&gt; &lt;peer file&gt;
     - *e.g.*: ```./bin/lu/luMain 1234 8192 32 0 peers.txt```
     - For executing the above command in multi-core clusters, the user should use ssh to execute the command on each node/peer. A user can execute benchmarks easier using FREDDO+MPI (see below).
 

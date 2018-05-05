@@ -34,8 +34,8 @@
  * Thus, if we have 32-bit contexts and 64-bit machines there are cases that will loose information.
  */
 //#define CONTEXT_32_BIT  // Use a 32-bit context
-#define CONTEXT_64_BIT  // Use a 64-bit context
-//#define CONTEXT_96_BIT	// Use 96-bit context as 3 32-bit values
+//#define CONTEXT_64_BIT  // Use a 64-bit context
+#define CONTEXT_96_BIT	// Use 96-bit context as 3 32-bit values
 //#define CONTEXT_192_BIT // Use 192-bit context as 3 64-bit values
 
 //// The type of the Context attribute (*** Note: Do not change the order of the Context fields because the {outer, middle, inner} assignment is used ***)
