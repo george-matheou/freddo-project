@@ -21,29 +21,29 @@ FREDDO utilizes two different network interfaces for inter-node communication: *
 **C) Install FREDDO**
 - Go to *./freddo* directory
 - Install FREDDO+CNI
-  - make cni
-  - make install
+  - ```make cni```
+  - ```make install```
   - FREDDO library will be installed in *../install_freddo*
 - Install FREDDO+MPI
   - make mpi MPI_BIN_PATH=<Path to the MPI's bin directory>
     - e.g., ```make mpi MPI_BIN_PATH=/opt/openmpi3/bin/```
-  - make install
+  - ```make install```
   - FREDDO library will be installed in *../install_freddo*
 
 **D) Uninstall FREDDO**
 - Go to *./freddo* directory
-- make unistall &nbsp;&nbsp;*(will remove the binaries/libraries and header files from ../install_freddo)*
-- make clean &nbsp;&nbsp;*(will clean the freddo project in the current directory)*
+- ```make unistall``` *(will remove the binaries/libraries and header files from ../install_freddo)*
+- ```make clean``` *(will clean the freddo project in the current directory)*
 
 ## Install and execute benchmarks using FREDDO+CNI
 - Go to *./benchmarks/cni* directory
-- make clean
-- make  &nbsp;&nbsp;*(all benchmarks will be compiled and installed in bin directory)*
-- make &lt;X&gt; &nbsp;&nbsp;*(will compile and install the X benchmark, e.g. make fibonacci)*
+- ```make clean```
+- ```make``` *(all benchmarks will be compiled and installed in bin directory)*
+- ```make <X>``` *(will compile and install the X benchmark, e.g. make fibonacci)*
 - Execute a benchmark
   - Example with LU
     - Usage: ./bin/lu/luMain &lt;port&gt; &lt;matrix size&gt; &lt;block size&gt; &lt;run serial&gt; &lt;peer file&gt;
-    - *e.g.*: ./bin/lu/luMain 1234 8192 32 0 peers.txt
+    - *e.g.*: ```./bin/lu/luMain 1234 8192 32 0 peers.txt```
     - For executing the above command in multi-core clusters, the user should use ssh to execute the command on each node/peer. A user can execute benchmarks easier using FREDDO+MPI (see below).
 
 **Notice:** *For the proper installation of the benchmarks, the ScaLAPACK, LAPACK and PLASMA libraries should be installed. Such libraries are needed for the Cholesky and QR benchmarks.*
