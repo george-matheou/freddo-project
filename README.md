@@ -38,13 +38,13 @@ FREDDO utilizes two different network interfaces for inter-node communication: *
 ## Install and execute benchmarks using FREDDO+CNI
 - Go to *./benchmarks/cni* directory
 - make clean
-- make  &nbsp;&nbsp;*(all the benchmarks will be compiled and installed in bin directory)*
-- make <X> &nbsp;&nbsp;*(will compile and install the X benchmark, e.g. make fibonacci)*
-- Execute a benchmark (for example LU)
-  - In each node execute the following command:<br />
-    &nbsp;&nbsp;&nbsp; ./bin/lu/luMain <port> <matrix size> <block size> <run serial> <peer file> <br />
-    &nbsp;&nbsp;&nbsp; *e.g.*: ./bin/lu/luMain 1234 8192 32 0 peers.txt
-  - For executing the above command in multi-core clusters, the user should write a script that will use ssh to execute the command on each node/peer. A user can execute benchmarks easier using FREDDO+MPI (see below).
+- make  &nbsp;&nbsp;*(all benchmarks will be compiled and installed in bin directory)*
+- make &lt;X&gt; &nbsp;&nbsp;*(will compile and install the X benchmark, e.g. make fibonacci)*
+- Execute a benchmark
+  - Example with LU
+    - Usage: ./bin/lu/luMain &lt;port&gt; &lt;matrix size&gt; &lt;block size&gt; &lt;run serial&gt; &lt;peer file&gt;
+    - *e.g.*: ./bin/lu/luMain 1234 8192 32 0 peers.txt
+    - For executing the above command in multi-core clusters, the user should use ssh to execute the command on each node/peer. A user can execute benchmarks easier using FREDDO+MPI (see below).
 
 **Notice:** *For the proper installation of the benchmarks, the ScaLAPACK, LAPACK and PLASMA libraries should be installed. Such libraries are needed for the Cholesky and QR benchmarks.*
 
