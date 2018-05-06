@@ -33,7 +33,7 @@ endef
 # Set the default goal of this makefile
 .DEFAULT_GOAL := all
 
-bench_dirs= bmmult cholesky lu qr blackscholes fibonacci powerset swaptions #recsum
+bench_dirs=bmmult cholesky lu qr blackscholes fibonacci powerset swaptions
 
 .PHONY: all
 all: $(bench_dirs)
@@ -47,12 +47,6 @@ bmmult:
 # Build the Cholesky Benchmark
 .PHONY: cholesky
 cholesky:
-	@echo -e "\nCreating -> " $@ 
-	$(call build_app,$@);
-
-# Build the conv2d Benchmark
-.PHONY: conv2d
-conv2d:
 	@echo -e "\nCreating -> " $@ 
 	$(call build_app,$@);
 
@@ -81,12 +75,6 @@ fibonacci:
 	@echo -e "\nCreating -> " $@ 
 	$(call build_app,$@);	
 
-# Build the Recursive Sum Benchmark
-.PHONY: recsum
-recsum:
-	@echo -e "\nCreating -> " $@ 
-	$(call build_app,$@);	
-
 # Build the Recursive Power Set Benchmark
 .PHONY: powerset
 powerset:
@@ -98,8 +86,7 @@ powerset:
 swaptions:
 	@echo -e "\nCreating -> " $@ 
 	$(call build_app,$@);
-	
-	
+
 .PHONY: clean
 clean:
 	$(foreach bench,$(bench_dirs), $(call clean_app,$(bench)); )	

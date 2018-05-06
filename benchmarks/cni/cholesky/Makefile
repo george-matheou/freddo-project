@@ -1,6 +1,6 @@
 include ../Makefile.in
 
-EXECS=bin/cholesky_scalapack_with_coll #bin/cholesky_scalapack  
+EXECS=bin/cholesky_scalapack_with_coll bin/cholesky_scalapack
 LIB_DIR_LAPACK= -L /home/geomat/scalapack/lib/ 
 LIBS_LAPACK=  -lscalapack -lreflapack -lrefblas -lgfortran
 

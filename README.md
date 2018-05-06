@@ -15,8 +15,7 @@ FREDDO utilizes two different network interfaces for inter-node communication: *
 
 **B) Install Prerequisites**
 1. GCC compiler with C++11 support
-2. Install Boost Library: sudo apt-get install libboost-all-dev
-3. Install an MPI Library with multi-threading support in the case you want to use FREDDO+MPI
+2. Install an MPI Library with multi-threading support in the case you want to use FREDDO+MPI
 
 **C) Install FREDDO**
 - Go to *./freddo* directory

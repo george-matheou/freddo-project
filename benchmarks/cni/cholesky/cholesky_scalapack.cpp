@@ -449,8 +449,8 @@ blockSizeInBytes = blockSize * blockSize * sizeof(TYPE);
 
 InitializeData();
 
-printf("=== Array A before parallel execution ====\n");
-printArray(A, blocks, blockSize);
+//printf("=== Array A before parallel execution ====\n");
+//printArray(A, blocks, blockSize);
 
 // Add in GAS before initializations
 cAddrA = ddm::addInGAS(A[0][0]);
@@ -509,8 +509,8 @@ timeParallel = timeFinish - timeStart;
 
 ddm::finalize();
 
-printf("=== Array A after parallel execution ====\n");
-printArray(A, blocks, blockSize);
+//printf("=== Array A after parallel execution ====\n");
+//printArray(A, blocks, blockSize);
 
 if (ddm::isRoot()) {
 	// Run serial

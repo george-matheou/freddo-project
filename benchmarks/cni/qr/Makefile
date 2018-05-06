@@ -4,7 +4,7 @@ FREDDO_LIB_DIR		=../../../install_freddo/lib
 FREDDO_INC_DIR		=../../../install_freddo/include
 
 ## LAPACK paths and libraries
-LAPACK_DIR		= /opt/lapack-3.6.1
+LAPACK_DIR		= /home/geomat/scalapack/lapack-3.6.1
 LIBS_PATHS		= -L$(LAPACK_DIR) -L$(LAPACK_DIR)/lib -L$(FREDDO_LIB_DIR)
 LIBS			= -llapacke  -llapack -lcblas -lblas -lgfortran -lm -lfreddo -pthread
 INCLUDES		= -I$(LAPACK_DIR)/CBLAS/include -I$(LAPACK_DIR)/LAPACKE/include -I$(FREDDO_INC_DIR)
@@ -20,7 +20,7 @@ COREBLAS_LIB_DIR = $(COREBLAS_ROOT)
 COREBLAS_LIBS 	 = -lCoreBlasTile
 TILE_MATRIX_INC_DIR	 = $(FREDDO_INC_DIR)/freddo/Collections/TileMatrix/
 # CBLAS libraries
-BLAS_ROOT 	 =  /opt/lapack-3.6.1
+BLAS_ROOT 	 =  $(LAPACK_DIR)
 BLAS_INC_DIR = -I$(LAPACK_DIR)/CBLAS/include -I$(LAPACK_DIR)/LAPACKE/include
 BLAS_LIB_DIR = -L$(LAPACK_DIR) -L$(LAPACK_DIR)/lib 
 BLAS_LIBS    = -llapacke  -llapack -lcblas -lblas -lgfortran -lm 
@@ -39,7 +39,6 @@ bin/qr_right_looking: Check_Accuracy.o qr_right_looking.cpp
 	-L$(PLASMA_LIB_DIR) $(PLASMA_LIBS) \
 	$(BLAS_LIB_DIR) $(BLAS_LIBS) \
 	-L$(FREDDO_LIB_DIR) $(FREDDO_LIBS)
-	
 
 Check_Accuracy.o: Check_Accuracy.cpp
 	g++ -c Check_Accuracy.cpp  -std=c++11 -O3 $(INCLUDES) $(LIBS_PATHS) $(LIBS)
@@ -49,7 +48,7 @@ bin/qr_serial_lapack: qr_serial_lapack.cpp
 
 .PHONY: clean
 clean:
-	rm --preserve-root Check_Accuracy.o bin/qr_right_looking 
-	rm --preserve-root -f $(COREBLAS_ROOT)/*.o  $(COREBLAS_ROOT)/*.a
+	rm -f --preserve-root Check_Accuracy.o bin/qr_right_looking
+	rm -f --preserve-root -f $(COREBLAS_ROOT)/*.o  $(COREBLAS_ROOT)/*.a
 
 	

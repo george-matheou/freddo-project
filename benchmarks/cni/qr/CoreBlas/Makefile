@@ -1,9 +1,3 @@
-#
-BLAS_ROOT = /home/geomat/openblas
-BLAS_INC_DIR = $(BLAS_ROOT)/include
-BLAS_LIB_DIR = $(BLAS_ROOT)/lib
-BLAS_LIBS = -lopenblas
-#
 PLASMA_ROOT = /home/geomat/plasma
 PLASMA_INC_DIR = $(PLASMA_ROOT)/include
 PLASMA_LIB_DIR = $(PLASMA_ROOT)/lib
@@ -15,8 +9,8 @@ TILE_MATRIX_INC_DIR		=../../../../install_freddo/include/freddo/Collections/Tile
 
 #
 CXX = g++
-CXXFLAGS = -g -Wall -std=c++11 -static -fopenmp -DDEBUG -I$(BLAS_INC_DIR) -I$(PLASMA_INC_DIR) -I$(TILE_MATRIX_INC_DIR)
-#CXXFLAGS = -O3 -fopenmp -DDEBUG -I$(BLAS_INC_DIR) -I$(PLASMA_INC_DIR) -I$(TMATRIX_INC_DIR)
+CXXFLAGS = -g -Wall -std=c++11 -static -fopenmp -DDEBUG -I$(PLASMA_INC_DIR) -I$(TILE_MATRIX_INC_DIR)
+#CXXFLAGS = -O3 -fopenmp -DDEBUG  -I$(PLASMA_INC_DIR) -I$(TMATRIX_INC_DIR)
 
 LOBJS = CoreBlasTile.o 
 
@@ -29,7 +23,7 @@ $(LIBS):	$(LOBJS)
 	ranlib $(LIBS)
 
 $(TARGET): CoreBlasTileTest.o $(LIBS)
-	$(CXX) $(CXXFLAGS) -o $@ CoreBlasTileTest.o $(TILE_MATRIX_OBJS) $(LIBS) -L$(PLASMA_LIB_DIR) $(PLASMA_LIBS) -L$(BLAS_LIB_DIR) $(BLAS_LIBS)
+	$(CXX) $(CXXFLAGS) -o $@ CoreBlasTileTest.o $(TILE_MATRIX_OBJS) $(LIBS) -L$(PLASMA_LIB_DIR) $(PLASMA_LIBS)
 	
 all:	$(LIBS)
 

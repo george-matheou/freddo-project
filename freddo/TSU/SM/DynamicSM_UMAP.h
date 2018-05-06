@@ -40,7 +40,7 @@
 #if defined(USE_DYNAMIC_SM_UMAP)
 	#include <unordered_map>
 #else
-	#include <boost/functional/hash.hpp>
+	//#include <boost/functional/hash.hpp>
 	#include <boost/unordered_map.hpp>
 #endif
 
@@ -50,15 +50,22 @@ using std::size_t;
 using std::hash;
 
 #if !defined(CONTEXT_32_BIT) && !defined(CONTEXT_64_BIT)
+
+	template <class T>
+	inline void hashCombine(std::size_t& seed, const T& v)  {
+		std::hash<T> hasher;
+		seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+	}
+
 	// This hasher is used for the 96-bit context
 	struct ContextHasher
 	{
 		std::size_t operator()(const context_t& c) const
 		{
 			size_t seed = 0;
-			boost::hash_combine(seed, c.Outer);
-			boost::hash_combine(seed, c.Middle);
-			boost::hash_combine(seed, c.Inner);
+			hashCombine(seed, c.Outer);
+			hashCombine(seed, c.Middle);
+			hashCombine(seed, c.Inner);
 
 			return seed;
 		}

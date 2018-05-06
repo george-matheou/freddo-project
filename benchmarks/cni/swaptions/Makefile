@@ -11,5 +11,5 @@ all:
 clean:
 	make -C src -f Makefile.freddo clean
 	make -C src -f Makefile.serial clean
-	rm ./bin/swaptions_freddo
-	rm ./bin/swaptions_serial
+	rm -f ./bin/swaptions_freddo
+	rm -f ./bin/swaptions_serial
