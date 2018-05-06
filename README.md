@@ -40,7 +40,7 @@ FREDDO utilizes two different network interfaces for inter-node communication: *
 - Go to *./benchmarks/cni* directory
 - ```make clean```
 - ```make``` *(all benchmarks will be compiled and installed in bin directory)*
-- make &lt;X&lt; *(will compile and install the X benchmark, e.g. ```make fibonacci```)*
+- make &lt;X&gt; *(will compile and install the X benchmark, e.g. ```make fibonacci```)*
 - Execute a benchmark
   - Example with LU
     - Usage: ./bin/lu/luMain &lt;port&lt; &lt;matrix size&gt; &lt;block size&gt; &lt;run serial&gt; &lt;peer file&gt;
