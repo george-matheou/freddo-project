@@ -42,10 +42,6 @@ endef
 
 bench_dirs= lu cholesky qr bmmult powerset fibonacci swaptions blackscholes
 
-ifndef net
-$(error net is not set. Use the following options: net=openmpi, net=mvapich, net=mpich, net=mpidefault)
-endif
-
 .PHONY: all
 all: $(bench_dirs)
 

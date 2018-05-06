@@ -14,14 +14,8 @@ LIBS			= -lfreddo -pthread
 INCLUDES		= -I$(FREDDO_INC_DIR)
 
 # The compiler that will be used
-OPENMPI_PATH=/opt/openmpi3
-MVAPICH_PATH=/opt/mvapich2
-MPICH_PATH=/opt/mpich3
-
-CXX_openmpi		= $(OPENMPI_PATH)/bin/mpic++
-CXX_mvapich		= $(MVAPICH_PATH)/bin/mpic++
-CXX_mpich		= $(MPICH_PATH)/bin/mpic++
-CXX_mpidefault	= mpic++
+CXX_MPI			= $(MPI_BIN_PATH)mpic++
+CC_MPI			= $(MPI_BIN_PATH)mpicc
 
 # Debug Flags
 DEB_FLAGS	 	= #-g

@@ -3,7 +3,7 @@ FREDDO_LIB_DIR		=../../../install_freddo/lib
 FREDDO_INC_DIR		=../../../install_freddo/include
 
 ## LAPACK paths and libraries
-LAPACK_DIR		= /opt/lapack-3.6.1
+LAPACK_DIR		= /home/geomat/scalapack/lapack-3.6.1
 LIBS_PATHS		= -L$(LAPACK_DIR) -L$(LAPACK_DIR)/lib -L$(FREDDO_LIB_DIR)
 LIBS			=  -llapack -lcblas -lblas -lgfortran -lm -lfreddo  # -pthread -llapacke 
 INCLUDES		= -I$(LAPACK_DIR)/CBLAS/include -I$(LAPACK_DIR)/LAPACKE/include -I$(FREDDO_INC_DIR)
@@ -29,33 +29,17 @@ FREDDO_LIBS 	= -lfreddo -pthread
 
 EXECS=core_blas_lib bin/qr_right_looking 
 
-ifeq (openmpi,$(MAKECMDGOALS))
-      CXX=$(CXX_openmpi)
-else ifeq (mvapich,$(MAKECMDGOALS))
-	  CXX=$(CXX_mvapich)   
-else ifeq (mpich,$(MAKECMDGOALS))
-	  CXX=$(CXX_mpich)     
-else 
-      CXX=$(CXX_mpidefault)
-endif
+# Set the default goal of this makefile
+.DEFAULT_GOAL := all
 
-.PHONY: openmpi
-openmpi:$(EXECS)
-
-.PHONY: mvapich	
-mvapich:$(EXECS)
-
-.PHONY: mpich	
-mpich:$(EXECS)
-
-.PHONY: mpidefault	
-mpidefault:$(EXECS)
+.PHONY: all
+all:$(EXECS)
 
 core_blas_lib:
 	make -C $(COREBLAS_ROOT)
 
 bin/qr_right_looking: qr_right_looking.cpp
-	$(CXX) $(CXXFLAGS) -o  bin/qr_right_looking qr_right_looking.cpp  \
+	$(CXX_MPI) $(CXXFLAGS) -o  bin/qr_right_looking qr_right_looking.cpp  \
 	$(BLAS_INC_DIR) -I$(PLASMA_INC_DIR) -I$(COREBLAS_INC_DIR) -I$(TILE_MATRIX_INC_DIR) -I$(FREDDO_INC_DIR) \
 	-L$(COREBLAS_LIB_DIR) $(COREBLAS_LIBS) \
 	-L$(PLASMA_LIB_DIR) $(PLASMA_LIBS) \
@@ -63,6 +47,6 @@ bin/qr_right_looking: qr_right_looking.cpp
 	-L$(FREDDO_LIB_DIR) $(FREDDO_LIBS)
 
 clean:
-	rm --preserve-root bin/qr_right_looking
+	rm -f --preserve-root bin/qr_right_looking
 	rm --preserve-root -f $(COREBLAS_ROOT)/*.o  $(COREBLAS_ROOT)/*.a
 	

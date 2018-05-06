@@ -28,41 +28,23 @@ OBJS= CumNormalInv.o MaxFunction.o RanUnif.o nr_routines.o icdf.o \
 	HJM_Securities.o Timer.o
 
 # The compiler that will be used
-CXX_openmpi		= /opt/openmpi2/bin/mpic++
-CXX_mvapich		= /opt/mvapich2/bin/mpic++
-CXX_mpich		= /opt/mpich3/bin/mpic++
-CXX_mpidefault	= mpic++
+CXX_MPI			= $(MPI_BIN_PATH)mpic++
+CC_MPI			= $(MPI_BIN_PATH)mpicc
 
-ifeq (openmpi,$(MAKECMDGOALS))
-      CXX=$(CXX_openmpi)
-else ifeq (mvapich,$(MAKECMDGOALS))
-	  CXX=$(CXX_mvapich)   
-else ifeq (mpich,$(MAKECMDGOALS))
-	  CXX=$(CXX_mpich)     
-else 
-      CXX=$(CXX_mpidefault)
-endif
+# Set the default goal of this makefile
+.DEFAULT_GOAL := all
 
-.PHONY: openmpi
-openmpi:$(EXEC)
-
-.PHONY: mvapich	
-mvapich:$(EXEC)
-
-.PHONY: mpich	
-mpich:$(EXEC)
-
-.PHONY: mpidefault	
-mpidefault:$(EXEC)
+.PHONY: all
+all:$(EXEC)
 
 $(EXEC): $(OBJS)
-	$(CXX)  $(OBJS) $(CXXFLAGS) $(DEF) -o $(EXEC)
+	$(CXX_MPI)  $(OBJS) $(CXXFLAGS) $(DEF) -o $(EXEC)
 
 .cpp.o:
-	$(CXX) -c $*.cpp $(CXXFLAGS) $(DEF) -o $*.o
+	$(CXX_MPI) -c $*.cpp $(CXXFLAGS) $(DEF) -o $*.o
 
 .c.o:
-	$(CXX) -c $*.c  $(CXXFLAGS) $(DEF)  -o $*.o
+	$(CXX_MPI) -c $*.c  $(CXXFLAGS) $(DEF)  -o $*.o
 
 clean:
 	rm -f $(OBJS) $(EXEC)

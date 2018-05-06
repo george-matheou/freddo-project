@@ -30,6 +30,7 @@
 
 #include "dthreads.h"
 #include "DistRData.h"
+#include <limits>
 
 namespace ddm {
 
