@@ -33,10 +33,6 @@ define clean_app
 	$(RM) -r $(BENCH_BIN)/$1
 endef
 
-# Disable Makefile's built-in rules
-.SUFFIXES:
-.SECONDARY:
-
 # Set the default goal of this makefile
 .DEFAULT_GOAL := all
 
