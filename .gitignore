@@ -7,5 +7,5 @@ install_freddo/*
 benchmarks/cni/bin
 CMakeLists.txt
 cmake-build-debug/
-scripts
-scripts/*
+auxiliary
+auxiliary/*
