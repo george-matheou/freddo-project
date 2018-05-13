@@ -1,11 +1,8 @@
-include ../Makefile.in
-
 # CoreBlas libraries
 COREBLAS_ROOT 	 		= ./CoreBlas
 COREBLAS_INC_DIR 		= $(COREBLAS_ROOT)
 COREBLAS_LIB_DIR 		= $(COREBLAS_ROOT)
 COREBLAS_LIBS 	 		= -lCoreBlasTile
-TILE_MATRIX_INC_DIR	 	= $(FREDDO_INC_DIR)/freddo/Collections/TileMatrix/
 
 all: core_blas_lib bin/qr_right_looking
 
@@ -14,7 +11,7 @@ core_blas_lib:
 
 bin/qr_right_looking: Check_Accuracy.o qr_right_looking.cpp
 	$(CXX) -Wall -std=c++11  -O3 -o  bin/qr_right_looking qr_right_looking.cpp Check_Accuracy.o \
-	$(BLAS_INC_DIR) $(PLASMA_INC_DIR) -I$(COREBLAS_INC_DIR) -I$(TILE_MATRIX_INC_DIR) -I$(FREDDO_INC_DIR) \
+	$(BLAS_INC_DIR) $(PLASMA_INC_DIR) -I$(COREBLAS_INC_DIR)  -I$(FREDDO_INC_DIR) \
 	-L$(COREBLAS_LIB_DIR) $(COREBLAS_LIBS) \
 	$(PLASMA_LIB_DIR) $(PLASMA_LIBS) \
 	$(BLAS_LIB_DIR) $(BLAS_LIBS) \
@@ -29,6 +26,6 @@ bin/qr_serial_lapack: qr_serial_lapack.cpp
 .PHONY: clean
 clean:
 	rm -f --preserve-root Check_Accuracy.o bin/qr_right_looking
-	rm -f --preserve-root -f $(COREBLAS_ROOT)/*.o  $(COREBLAS_ROOT)/*.a
+	make -C $(COREBLAS_ROOT) -f Makefile clean_all
 
 	

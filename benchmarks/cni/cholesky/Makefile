@@ -1,5 +1,3 @@
-include ../Makefile.in
-
 EXECS=bin/cholesky_scalapack_with_coll bin/cholesky_scalapack
 LIBS_LAPACK=-lscalapack -lreflapack -lrefblas -lgfortran
 

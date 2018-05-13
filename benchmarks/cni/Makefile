@@ -10,6 +10,49 @@ CP			= cp
 MAKE		= make
 SED 		= sed
 
+FREDDO_INSTALL_DIR=/usr/local
+FREDDO_LIB_DIR=$(FREDDO_INSTALL_DIR)/lib
+FREDDO_INC_DIR=$(FREDDO_INSTALL_DIR)/include
+
+## SCALAPACK paths and libraries
+LIB_DIR_SCALAPACK	=/home/geomat/scalapack/lib/
+
+## LAPACK paths and libraries
+LAPACK_DIR			=/home/geomat/scalapack/lapack-3.6.1
+LAPACK_INCLUDES		=-I$(LAPACK_DIR)/CBLAS/include -I$(LAPACK_DIR)/LAPACKE/include -I$(FREDDO_INC_DIR)
+LAPACK_LIBS_PATHS	=-L$(LAPACK_DIR) -L$(LAPACK_DIR)/lib -L$(FREDDO_LIB_DIR)
+LAPACK_LIBS			=-llapacke  -llapack -lcblas -lblas -lgfortran -lm
+
+## CBLAS paths and libraries
+BLAS_ROOT 			=$(LAPACK_DIR)
+BLAS_INC_DIR 		=-I$(LAPACK_DIR)/CBLAS/include -I$(LAPACK_DIR)/LAPACKE/include
+BLAS_LIB_DIR 		=-L$(LAPACK_DIR) -L$(LAPACK_DIR)/lib
+BLAS_LIBS    		=-llapacke  -llapack -lcblas -lblas -lgfortran -lm
+
+## Plasma paths and libraries
+PLASMA_DIR 			=/home/geomat/plasma
+PLASMA_INC_DIR 		=-I$(PLASMA_DIR)/include
+PLASMA_LIB_DIR 		=-L$(PLASMA_DIR)/lib
+PLASMA_LIBS 		=-lplasma -lcoreblas -lquark
+
+# Extra flags to give to the C++ compiler
+FREDDO_LIBS			=-lfreddo -pthread
+
+# The compiler that will be used
+CXX					= g++
+
+# Debug Flags
+#DEB_FLAGS	 	= -g
+#DEB_FLAGS 		+= -DTSU_COLLECT_STATISTICS
+#DEB_FLAGS 		+= -DNETWORK_STATISTICS
+
+# Test Flags
+TEST_FLAGS 			=  #-DTEST_DYNAMIC_SM
+CXXFLAGS 			= -Wall -O3 -std=c++11 $(TEST_FLAGS) $(DEB_FLAGS) -I$(FREDDO_INC_DIR) -L$(FREDDO_LIB_DIR) $(FREDDO_LIBS)
+
+# Export all variables
+export
+
 # Arg 1: The benchmark directory
 define build_app
     $(MAKE) -C $1

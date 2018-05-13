@@ -1,5 +1,3 @@
-include ../Makefile.in
-
 all: bin/powerset
 
 bin/powerset: powerset.cpp

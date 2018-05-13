@@ -25,26 +25,29 @@ FREDDO utilizes two different network interfaces for inter-node communication: *
     - e.g., ```make mpi MPI_BIN_PATH=/opt/openmpi3/bin/```
 - ```make install```
   - FREDDO library will be installed in `/usr/local` by default. If you want to change the installation directory you should set the *FREDDO_INSTALL_DIR* variable. For example:
-    - ``make install FREDDO_INSTALL_DIR=./install_freddo``
+    - ``make install FREDDO_INSTALL_DIR=../install_freddo``
 
 **D) Uninstall FREDDO**
 - Go to *freddo* directory
 - ```make uninstall``` *(will remove the binaries/libraries and header files from the installation directory)*
   - If during installation you set a different installation directory than the default (i.e., `/usr/local`), you should set the *FREDDO_INSTALL_DIR* variable. For example:
-    - ``make uninstall FREDDO_INSTALL_DIR=./install_freddo``
+    - ``make uninstall FREDDO_INSTALL_DIR=../install_freddo``
 
 ## Install and execute benchmarks
 
 ### A) Install and execute benchmarks using FREDDO+CNI
 - Go to *./benchmarks/cni* directory
-- ```make clean```
-- ```make``` *(all benchmarks will be compiled and installed in bin directory)*
-- make &lt;X&gt; *(will compile and install the X benchmark, e.g. ```make fibonacci```)*
-- Execute a benchmark
-  - Example with LU
-    - Usage: ./bin/lu/luMain &lt;port&lt; &lt;matrix size&gt; &lt;block size&gt; &lt;run serial&gt; &lt;peer file&gt;
-    - *e.g.*: ```./bin/lu/luMain 1234 8192 32 0 peers.txt```
-    - For executing the above command in multi-core clusters, the user should use ssh to execute the command on each node/peer. A user can execute benchmarks easier using FREDDO+MPI (see below).
+- Install benchmarks
+  - ```make clean```
+  - ```make``` *(all benchmarks will be compiled and installed in bin directory)*
+  - make &lt;X&gt; *(will compile and install the X benchmark, e.g. ```make fibonacci```)*
+  - **Notice:** if during FREDDO installation you set a different installation directory than the default (i.e., `/usr/local`), you should set the *FREDDO_INSTALL_DIR* variable, using absolute paths. For example:
+    - `make FREDDO_INSTALL_DIR=~/Desktop/Workspace/freddo-project/install_freddo/`
+    - `make fibonacci FREDDO_INSTALL_DIR=~/Desktop/Workspace/freddo-project/install_freddo/`
+  - Execute a benchmark
+    - Example with LU. *LU usage:* ./bin/lu/luMain &lt;port&gt; &lt;matrix size&gt; &lt;block size&gt; &lt;run serial&gt; &lt;peer file&gt;
+      - *e.g.*: ```./bin/lu/luMain 1234 8192 32 0 peers.txt```
+      - **Notice:** for executing the above command in multi-core clusters, the user should use ssh to execute the command on each node/peer. A user can execute benchmarks easier using FREDDO+MPI (see below).
 
 ### B) Install and execute benchmarks using FREDDO+MPI
 - Go to *./benchmarks/mpi* directory

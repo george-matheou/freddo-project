@@ -2,11 +2,9 @@
 # This makefile contains variables and flags used for compiling the benchmarks			 #
 ##########################################################################################
 
-#FREDDO_LIB_DIR		= /usr/local/lib
-#FREDDO_INC_DIR		= /usr/local/include/freddo
-
-FREDDO_LIB_DIR		=../../../install_freddo/lib
-FREDDO_INC_DIR		=../../../install_freddo/include
+FREDDO_INSTALL_DIR=/usr/local
+FREDDO_LIB_DIR=$(FREDDO_INSTALL_DIR)/lib
+FREDDO_INC_DIR=$(FREDDO_INSTALL_DIR)/include
 
 # Extra flags to give to the C++ compiler
 LIBS_PATHS		= -L$(FREDDO_LIB_DIR)
