@@ -18,21 +18,20 @@ FREDDO utilizes two different network interfaces for inter-node communication: *
 2. Install an MPI Library with multi-threading support in the case you want to use FREDDO+MPI
 
 **C) Install FREDDO**
-- Go to *./freddo* directory
-- Install FREDDO+CNI
-  - ```make cni```
-  - ```make install```
-  - FREDDO library will be installed in *../install_freddo*
-- Install FREDDO+MPI
-  - make mpi MPI_BIN_PATH=<Path to the MPI's bin directory>
+- Go to *freddo* directory
+- ```make clean``` *(will clean the freddo project in the current directory)*
+- Install FREDDO+CNI:  ```make cni```
+- Install FREDDO+MPI: make mpi MPI_BIN_PATH=<Path to the MPI's bin directory>
     - e.g., ```make mpi MPI_BIN_PATH=/opt/openmpi3/bin/```
-  - ```make install```
-  - FREDDO library will be installed in *../install_freddo*
+- ```make install```
+  - FREDDO library will be installed in `/usr/local` by default. If you want to change the installation directory you should set the *FREDDO_INSTALL_DIR* variable. For example:
+    - ``make install FREDDO_INSTALL_DIR=./install_freddo``
 
 **D) Uninstall FREDDO**
-- Go to *./freddo* directory
-- ```make unistall``` *(will remove the binaries/libraries and header files from ../install_freddo)*
-- ```make clean``` *(will clean the freddo project in the current directory)*
+- Go to *freddo* directory
+- ```make uninstall``` *(will remove the binaries/libraries and header files from the installation directory)*
+  - If during installation you set a different installation directory than the default (i.e., `/usr/local`), you should set the *FREDDO_INSTALL_DIR* variable. For example:
+    - ``make uninstall FREDDO_INSTALL_DIR=./install_freddo``
 
 ## Install and execute benchmarks
 

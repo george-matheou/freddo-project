@@ -13,8 +13,8 @@ MKDIR		= mkdir -p
 FREDDO_LIB_NAME=libfreddo.a
 BUILD_PATH=Build
 
-#FREDDO_INSTALL_DIR=/usr/local
-FREDDO_INSTALL_DIR=../install_freddo
+FREDDO_INSTALL_DIR=/usr/local
+#FREDDO_INSTALL_DIR=../install_freddo
 FREDDO_LIB_DIR=$(FREDDO_INSTALL_DIR)/lib
 FREDDO_INCLUDE_DIR=$(FREDDO_INSTALL_DIR)/include/freddo
 
@@ -82,7 +82,7 @@ install:
 	$(CP) *.h $(FREDDO_INCLUDE_DIR)
 	$(foreach dir,$(include_dirs),$(MKDIR) $(FREDDO_INCLUDE_DIR)/$(dir); $(CP) $(dir)/*.h $(FREDDO_INCLUDE_DIR)/$(dir) 2>/dev/null; )
 
-.PHONY: unistall
-unistall:
+.PHONY: uninstall
+uninstall:
 	$(RM) $(FREDDO_LIB_DIR)/$(FREDDO_LIB_NAME)
 	$(RM) -r $(FREDDO_INCLUDE_DIR)
