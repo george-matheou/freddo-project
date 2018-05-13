@@ -31,9 +31,9 @@
 #define COMPRESSIONUNIT_H_
 
 // Includes
-#include "../ddm_defs.h"
-#include "../Error.h"
-#include "NetworkDefs.h"
+#include "../../ddm_defs.h"
+#include "../../Error.h"
+#include "../NetworkDefs.h"
 #include <iostream>
 
 // Structures

@@ -1,23 +1,60 @@
+##################################################### The FREDDO's Makefile #####################################################
+
 ############ Flags and Variables ############
 SHELL 		= /bin/bash
-RM			= rm -f
+RM			= rm -f --preserve-root
 MV 			= mv -f
 MAKE		= make
 SED 		= sed
 CP			= cp
 MKDIR		= mkdir -p
 
+############ Installation paths of freddo
 FREDDO_LIB_NAME=libfreddo.a
-BUILD_PATH = Build
+BUILD_PATH=Build
 
 #FREDDO_INSTALL_DIR=/usr/local
 FREDDO_INSTALL_DIR=../install_freddo
 FREDDO_LIB_DIR=$(FREDDO_INSTALL_DIR)/lib
 FREDDO_INCLUDE_DIR=$(FREDDO_INSTALL_DIR)/include/freddo
 
+############ Extra flags for debugging
+## NET_DEBUG 	= Print debug messages about the network operations
+## KERNEL_DEBUG = Print debug messages about the Kernels
+## TSU_DEBUG 	= Print debug messages about the TSU
+## -pg			= For the gprof tool
+DEB_FLAGS = #-g
+#DEB_FLAGS += -DTSU_COLLECT_STATISTICS
+#DEB_FLAGS := $(DEB_FLAGS) -DNET_DEBUG
+#DEB_FLAGS := $(DEB_FLAGS) -DKERNEL_DEBUG
+#DEB_FLAGS := $(DEB_FLAGS) -DTSU_DEBUG
+#DEB_FLAGS := $(DEB_FLAGS) -DNETWORK_STATISTICS
+
+############ Extra flags to give to the C++ compiler
+LIBS_PATHS		=
+LIBS			=
+INCLUDES		=
+EXTRA_OPTIONS 	= -static
+CXXFLAGS 		= -Wall -O3 -std=c++11 -pthread $(EXTRA_OPTIONS) $(DEB_FLAGS) $(INCLUDES) $(LIBS_PATHS) $(LIBS)
+############ Extra flags to give to the C compiler
+CFLAGS     		=
+############ The compilers that will be used
+CXX_CNI			= g++
+CC_CNI			= gcc
+CXX_MPI			= $(MPI_BIN_PATH)mpic++
+CC_MPI			= $(MPI_BIN_PATH)mpicc
+############ Flags for creating libraries
+AR 				= ar
+ARFLAGS			= crs
+############ The folder that contains the FREDDO libraries
+FREDDO_LIB		= ./$(FREDDO_LIB_NAME)
+
 include_dirs=Algorithm TSU TSU/SM TSU/SM/google Timer Distributed Distributed/custom_net Distributed/mpi_net Collections Collections/Matrix Collections/TileMatrix Collections/PTileMatrix
 
-.DEFAULT_GOAL :=
+# Export variables to other makefiles
+export
+
+.DEFAULT_GOAL := cni
 
 # For Custom Network Interface support
 .PHONY: cni
@@ -28,7 +65,7 @@ cni:
 # For MPI support
 .PHONY: mpi
 mpi:
-	@echo "Creating FREDDO with MPI. MPI path: " $(MPI_PATH)
+	@echo "Creating FREDDO with MPI. MPI path: " $(MPI_BIN_PATH)
 	$(MAKE) -C $(BUILD_PATH) -f Makefile.mk net=mpi
 
 # For the Custom network
@@ -47,5 +84,5 @@ install:
 
 .PHONY: unistall
 unistall:
-	$(RM) --preserve-root $(FREDDO_LIB_DIR)/$(FREDDO_LIB_NAME)
-	$(RM) -r --preserve-root $(FREDDO_INCLUDE_DIR)
+	$(RM) $(FREDDO_LIB_DIR)/$(FREDDO_LIB_NAME)
+	$(RM) -r $(FREDDO_INCLUDE_DIR)
