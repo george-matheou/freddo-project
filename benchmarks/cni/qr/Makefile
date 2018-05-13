@@ -1,8 +1,14 @@
-# CoreBlas libraries
+## CoreBlas libraries
 COREBLAS_ROOT 	 		= ./CoreBlas
 COREBLAS_INC_DIR 		= $(COREBLAS_ROOT)
 COREBLAS_LIB_DIR 		= $(COREBLAS_ROOT)
 COREBLAS_LIBS 	 		= -lCoreBlasTile
+
+## CBLAS paths and libraries
+BLAS_ROOT 			=$(LAPACK_DIR)
+BLAS_INC_DIR 		=-I$(LAPACK_DIR)/CBLAS/include -I$(LAPACK_DIR)/LAPACKE/include
+BLAS_LIB_DIR 		=-L$(LAPACK_DIR) -L$(LAPACK_DIR)/lib
+BLAS_LIBS    		=-llapacke  -llapack -lcblas -lblas -lgfortran -lm
 
 all: core_blas_lib bin/qr_right_looking
 

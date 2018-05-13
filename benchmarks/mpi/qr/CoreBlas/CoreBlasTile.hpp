@@ -12,7 +12,7 @@
 #include <plasma.h>
 #include <core_blas.h>
 #include <cassert>
-#include <TileMatrix.h>
+#include "TileMatrix/TileMatrix.h"
 
 #ifndef __DEF__MIN__
 #define __DEF__MIN__

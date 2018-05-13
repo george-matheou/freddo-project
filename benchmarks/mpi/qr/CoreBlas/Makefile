@@ -1,35 +1,33 @@
+TILE_MATRIX_OBJS		=TileMatrix/TileMatrix.o TileMatrix/BMatrix.o Matrix/Matrix.o
+TILE_MATRIX_INC_DIR		=TileMatrix/
 
-PLASMA_ROOT = /home/geomat/plasma
-PLASMA_INC_DIR = $(PLASMA_ROOT)/include
-PLASMA_LIB_DIR = $(PLASMA_ROOT)/lib
-PLASMA_LIBS = -lplasma -lcoreblas #-lquark -lpthread
-#
-FREDDO_BUILD 			= ../../../../freddo/Build/Collections
-TILE_MATRIX_OBJS		= $(FREDDO_BUILD)/TileMatrix/TileMatrix.o $(FREDDO_BUILD)/TileMatrix/BMatrix.o $(FREDDO_BUILD)/Matrix/Matrix.o   
-TILE_MATRIX_INC_DIR		=../../../../install_freddo/include/freddo/Collections/TileMatrix/
-
-#
-CXX = g++
-CXXFLAGS = -g -Wall -std=c++11  -DDEBUG -I$(PLASMA_INC_DIR) -I$(TILE_MATRIX_INC_DIR) #-static -fopenmp
-#CXXFLAGS = -O3 -fopenmp -DDEBUG -I$(BLAS_INC_DIR) -I$(PLASMA_INC_DIR) -I$(TMATRIX_INC_DIR)
+CXXFLAGS = -Wall -std=c++11 -O3 $(PLASMA_INC_DIR) -I$(TILE_MATRIX_INC_DIR)
 
 LOBJS = CoreBlasTile.o 
-
 LIBS = libCoreBlasTile.a
 
 TARGET = test
 
-$(LIBS):	$(LOBJS)
+$(LIBS): $(LOBJS) $(TILE_MATRIX_OBJS)
 	$(AR) r $(LIBS) $(LOBJS) $(TILE_MATRIX_OBJS)
 	ranlib $(LIBS)
 
-$(TARGET): CoreBlasTileTest.o $(LIBS)
-	$(CXX) $(CXXFLAGS) -o $@ CoreBlasTileTest.o $(TILE_MATRIX_OBJS) $(LIBS) -L$(PLASMA_LIB_DIR) $(PLASMA_LIBS) #$(BLAS_LIBS)
-	
-all:	$(LIBS)
+$(TARGET): $(TILE_MATRIX_OBJS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $@ CoreBlasTileTest.o $(TILE_MATRIX_OBJS) $(LIBS) $(PLASMA_LIB_DIR) $(PLASMA_LIBS)
+
+all: $(TILE_MATRIX_OBJS) $(LIBS)
 
 clean_all:
-	rm -f *.o $(LOBJS) $(LIBS)
+	rm -f *.o $(LOBJS) $(LIBS) $(TILE_MATRIX_OBJS)
+
+TileMatrix/TileMatrix.o: TileMatrix/TileMatrix.cpp
+	$(CXX) $(CXXFLAGS) -c TileMatrix/TileMatrix.cpp -o TileMatrix/TileMatrix.o
+
+TileMatrix/BMatrix.o: TileMatrix/BMatrix.cpp
+	$(CXX) $(CXXFLAGS) -c TileMatrix/BMatrix.cpp -o TileMatrix/BMatrix.o
+
+Matrix/Matrix.o:  Matrix/Matrix.cpp
+	$(CXX) $(CXXFLAGS) -c Matrix/Matrix.cpp -o Matrix/Matrix.o
 
 .cpp.o :
 	$(CXX) $(CXXFLAGS) -c $<

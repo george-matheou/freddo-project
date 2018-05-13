@@ -1,7 +1,5 @@
-include ../Makefile.in
-
 EXECS=bin/cholesky_scalapack bin/cholesky_scalapack_with_coll
-LIB_DIR_LAPACK= -L /home/geomat/scalapack/lib/ 
+LIB_DIR_LAPACK= -L$(SCALAPACK_LIB_DIR)
 LIBS_LAPACK=  -lscalapack -lreflapack -lrefblas -lgfortran -lm
 
 # Set the default goal of this makefile

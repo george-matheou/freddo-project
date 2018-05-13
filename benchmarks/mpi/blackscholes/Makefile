@@ -1,5 +1,3 @@
-include ../Makefile.in
-
 SOURCES=$(wildcard *.cpp)
 EXECS=$(SOURCES:.cpp=)
 BIN_DIR=./bin
