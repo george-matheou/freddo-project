@@ -1,6 +1,5 @@
 # freddo-project
-FREDDO is a software runtime, implemented in C++11, that provides data-driven concurrency on single-node and distributed multi-core systems. It is based on Data-Driven Multithreading [1-2], a hybrid control-flow/data-flow
-model that schedules threads based on data availability on sequential processors.
+FREDDO is a software runtime, implemented in C++11, that provides data-driven concurrency on single-node and distributed multi-core systems. It is based on Data-Driven Multithreading [1-2], a hybrid control-flow/data-flow model that schedules threads based on data availability on sequential processors.
 
 ## Preface
 In case you have any publications resulting from FREDDO, please cite the following publications:
@@ -10,12 +9,9 @@ In case you have any publications resulting from FREDDO, please cite the followi
 
 ## Install/uninstall FREDDO
 
-**A) Network Interfaces** <br />
-FREDDO utilizes two different network interfaces for inter-node communication: *Custom Network Interface (CNI)* and *MPI*. CNI is an optimized implementation with TCP sockets and implements a fully connected mesh of inter-node connections (i.e., each node maintains a connection to all other nodes). Currently, CNI supports only Ethernet-based interconnects. The major benefits of providing MPI support are portability and flexibility. We have tested FREDDO with OpenMPI (Versions: 1.8.4, 2.0.1 and 2.1.1). However, we expect that FREDDO will work with any MPI version that supports multithreading. FREDDO with CNI support is called *FREDDO+CNI* and FREDDO with MPI support is called *FREDDO+MPI*.
-
 **B) Install Prerequisites**
 1. GCC compiler with C++11 support
-2. Install an MPI Library with multi-threading support in the case you want to use FREDDO+MPI
+2. MPI library with multi-threading support. FREDDO has been tested with OpenMPI (Versions: 1.8.4, 2.0.1 and 2.1.1). However, we expect that FREDDO will work with any MPI version that supports multithreading.
 
 **C) Install FREDDO**
 - Go to *freddo* directory
