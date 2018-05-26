@@ -26,7 +26,7 @@
  */
 
 #include "NetworkManager.h"
-#include "../../DistRData.h"
+#include "../DistRData.h"
 #include <stdio.h>
 
 /**

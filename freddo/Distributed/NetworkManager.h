@@ -17,8 +17,8 @@
  * along with FREDDO.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- 
- /*
+
+/*
  * NetworkManager.h
  *
  *  Created on: Oct 26, 2015
@@ -36,42 +36,47 @@
 #include <vector>
 #include <iostream>
 #include <string.h>
-#include "../../Auxiliary.h"
+#include "../Auxiliary.h"
 #include <pthread.h>
 #include <atomic>
-#include "../GAS.h"
-#include "PeerListReader.h"
-#include "Network.h"
-#include "../NetworkDefs.h"
-#include "../../TSU/TSU.h"
-#include <cstdint>
+#include "GAS.h"
+#include "NetworkDefs.h"
+#include "../TSU/TSU.h"
+#include <mpi.h>
+
+// Use locks for sending to other nodes
+#define PROTECT_SEND_WITH_LOCK
 
 // Namespaces
 using namespace std;
+
+// This enumeration defines special tags for the MPI implementation
+enum MpiTag_e
+	: Byte {
+		TAG_GENERAL_PACKET = 253,
+	TAG_HANDSHAKE,
+	TAG_DATA
+};
+typedef enum MpiTag_e MpiTag;
 
 // Structures
 // A Peer structure
 typedef struct Peer_t
 {
-		IpAddress ip;  // The peer's IP address
-		PortNumber port;  // The peer's port number
-		Socket outSocket;  // The outgoing socket of the peer (we will send data to this socket)
-		Socket inSocket;  // The incoming socket of the peer (we will receive data from this socket)
 		PeerID id;  // The id of the peer
 		unsigned int numberOfCores;  // The number of cores of the peer that will be used for computation
+
+#ifdef PROTECT_SEND_WITH_LOCK
 		pthread_mutex_t outgoingMutex = PTHREAD_MUTEX_INITIALIZER;  // Protects the outgoing socket of the peer
 
 		// Close the socket connections of the peer
 		void destroy() {
-			shutdown(inSocket, 0);
-			shutdown(outSocket, 1);
-			Network::closeSocket(outSocket);
 			pthread_mutex_destroy(&outgoingMutex);  // Destroy the mutex
 		}
+#endif
 
 		friend ostream &operator<<(ostream &output, const Peer_t &other) {
-			output << "IP: " << other.ip << " | Port: " << other.port << " | Outgoing Socket: " << other.outSocket << " | Incoming Socket: "
-			    << other.inSocket << " | ID: " << other.id << " | NumberOfCores: " << other.numberOfCores << endl;
+			output << "ID: " << other.id << " | NumberOfCores: " << other.numberOfCores << endl;
 			return output;
 		}
 } Peer;
@@ -82,10 +87,10 @@ class NetworkManager final
 
 		/**
 		 * It creates a network manager object
-		 * @param port the port number of the peer
-		 * @param peerListReader a peer list reader
+		 * @param numOfKernels the number of Kernels
+		 * @param numOfPeers the number of peers of the system
 		 */
-		NetworkManager(PortNumber port, const PeerListReader& peerListReader);
+		NetworkManager(unsigned int numOfKernels, unsigned int numOfPeers);
 
 		/**
 		 * The default constructor
@@ -125,25 +130,20 @@ class NetworkManager final
 		 * closes all the sockets.
 		 */
 		void stop() {
-			// Broadcast finalize message to other peers
-			if (m_localPeerID == ROOT_PEER_ID) {
-				printf("Root broadcasts finalization message to the other peers\n");
-				broadcastFinalization();
-			}
-
 //			// Wait the pthread to finish its execution
 //			if (pthread_join(m_pthreadID, NULL) != 0) {
 //				perror("Network failed to call successfully the pthread_join function");
 //				exit(ERROR);
 //			}
-		}
 
-		/**
-		 * @return the physical id of a peer in the machine. For instance, if a machine
-		 * has two peers, the first one has machineID=0 and the second machineID=1)
-		 */
-		inline unsigned int getMachineID() const {
-			return m_machineID;
+#ifdef PROTECT_SEND_WITH_LOCK
+			// Destroy the peers
+			for (Peer& p : m_peerList) {
+				if (p.id != m_localPeerID) {
+					p.destroy();
+				}
+			}
+#endif
 		}
 
 		/**
@@ -251,15 +251,22 @@ class NetworkManager final
 			// The address from which the data will be sent
 			MemAddr address = m_gasRef->getAddress(addrID, offset);
 
+#ifdef PROTECT_SEND_WITH_LOCK
 			pthread_mutex_lock(&m_peerList[id].outgoingMutex);
 			{
+#endif
 				// Send the packet that describes the data
 				sendGeneralPacketToPeerUnsafe(id, packet);
 
+				//SAFE_LOG("sendDataToPeer: sending data of address " << (void*) address << " (offset: " << offset << ")" << " to peer " << id);
+
 				// Send the data to the peer
 				sendToPeerUnsafe(id, (const Byte*) address, size);
+
+#ifdef PROTECT_SEND_WITH_LOCK
 			}
 			pthread_mutex_unlock(&m_peerList[id].outgoingMutex);
+#endif
 		}
 
 		/**
@@ -300,6 +307,47 @@ class NetworkManager final
 			pthread_mutex_unlock(&m_peerList[id].outgoingMutex);
 #endif
 		}
+
+		/**
+		 * Send a multiple update block to a peer
+		 * @param id the peer's id
+		 * @param tid the Thread ID in which the updates belong
+		 * @param size the number of multiple updates
+		 * @param block the pointer to the mutliple updates
+		 */
+		inline void sendMutlUpdBlockToPeer(PeerID id, TID tid, size_t size, const MultUpdateEntry* block) {
+			if (id == m_localPeerID)
+				return;
+
+			increaseSendCounter();  // Increase the send counter
+			setPeerColor(TerminationColor::BLACK);  // Set peer's color to black
+
+			GeneralPacket packet;
+			packet.type = NetMsgType::MULTIPLE_UPDATE_BLOCK;
+			packet.tid = tid;
+			packet.context = CREATE_N1(size);
+
+#ifdef PROTECT_SEND_WITH_LOCK
+			pthread_mutex_lock(&m_peerList[id].outgoingMutex);
+			{
+#endif
+				// Send the packet that describes the data
+				sendGeneralPacketToPeerUnsafe(id, packet);
+
+				// Send the data to the peer
+				sendToPeerUnsafe(id, (const Byte*) block, size * sizeof(MultUpdateEntry));
+
+#ifdef PROTECT_SEND_WITH_LOCK
+			}
+			pthread_mutex_unlock(&m_peerList[id].outgoingMutex);
+#endif
+		}
+
+		/**
+		 * Distributed Termination based on the Dijkstra-Scholten Algorithm
+		 * This function is called when the TSU is idle
+		 */
+		void doTerminationProbing();
 
 		/**
 		 * Send a DistRData to peer, i.e. data about a recursive function call
@@ -402,7 +450,7 @@ class NetworkManager final
 #endif
 
 #else
-				packet.context = (context_t ) CREATE_N1(parentDistRData);
+				packet.context = (context_t) CREATE_N1(parentDistRData);
 #endif
 
 				packet.maxContext = CREATE_N1(0);
@@ -414,57 +462,13 @@ class NetworkManager final
 			pthread_mutex_unlock(&m_peerList[id].outgoingMutex);
 		}
 
-		/**
-		 * Send a multiple update block to a peer
-		 * @param id the peer's id
-		 * @param tid the Thread ID in which the updates belong
-		 * @param size the number of multiple updates
-		 * @param block the pointer to the mutliple updates
-		 */
-		inline void sendMutlUpdBlockToPeer(PeerID id, TID tid, size_t size, const MultUpdateEntry* block) {
-			if (id == m_localPeerID)
-				return;
-
-			increaseSendCounter();  // Increase the send counter
-			setPeerColor(TerminationColor::BLACK);  // Set peer's color to black
-
-			GeneralPacket packet;
-			packet.type = NetMsgType::MULTIPLE_UPDATE_BLOCK;
-			packet.tid = tid;
-			packet.context = CREATE_N1(size);
-
-			pthread_mutex_lock(&m_peerList[id].outgoingMutex);
-			{
-				// Send the packet that describes the data
-				sendGeneralPacketToPeerUnsafe(id, packet);
-
-				// Send the data to the peer
-				sendToPeerUnsafe(id, (const Byte*) block, size * sizeof(MultUpdateEntry));
-			}
-			pthread_mutex_unlock(&m_peerList[id].outgoingMutex);
-		}
-
-		/**
-		 * Distributed Termination based on the Dijkstra-Scholten Algorithm
-		 * This function is called when the TSU is idle
-		 */
-		void doTerminationProbing();
-
 	private:
 		// The variables
 		vector<Peer> m_peerList;  // A vector that contains the peer list
-
-		// For each physical node (Ip Address) we keep the different number of peers (port numbers)
-		unordered_map<IpAddress, vector<PortNumber>> m_physicalNodes;
 		unsigned int m_numOfPeers = 0;  // The number of the peers of the distributed system
-		PortNumber m_port = 0;  // The port number of the peer that owns this network object
-		IpAddress m_ip = 0;  // The IP address of the peer that owns this network object
 		PeerID m_localPeerID = 0;  // The identifier of the local peer
-		Socket m_listenSocket = 0;  // The socket used for listening from the other peers (for the server-part of the peer)
 		unsigned int m_numOfCores;  // The number of cores that will be used for computation (i.e. the Kernels)
 		pthread_t m_pthreadID;  // The pthread's id that created by pthread_create
-		fd_set m_incomingSockets;  // A socket list used for the pselect function
-		Socket m_maxSocket;  // Holds the socket with the maximum values (used for the pselect function)
 		unsigned int m_totalNumCores = 0;  // The total number of cores in the distributed system
 		unsigned int* m_coresPerPeer = nullptr;  // For each peer we keep the number of cores
 		TSU* m_tsuRef = nullptr;  // A pointer to the TSU module
@@ -496,32 +500,16 @@ class NetworkManager final
 		 */
 		std::atomic<TerminationColor> m_peerColor;
 
-		/* The physical id of a peer in the machine (if a machine has two peers, the
-		 * first one has machineID=0 and the second machineID=1)
-		 */
-		unsigned int m_machineID = 0;
-
 #ifdef NETWORK_STATISTICS
-		unsigned long m_messagesReceived = 0;
-		unsigned long m_dataReceived = 0;
+		long m_messagesReceived = 0;
+		long m_dataReceived = 0;
 #endif
 
 		/**
-		 * Add the IPs and port numbers of the peers in the network manager
-		 * @param peerEntries the IPs and port numbers that were defined in the peer file
-		 * @param localIP the IP address of the local peer
-		 * @param localPort the port number of the local peer
-		 * @return the number of kernels of the local peer that is specified in the peer-list file, otherwise 0
-		 */
-		unsigned int addPeerIPs(const vector<PeerFileEntry>& peerEntries, IpAddress localIP, PortNumber localPort);
-
-		/**
 		 * Adds a peer in the network
-		 * @param ip the peer's IP address
-		 * @param port the peer's port number
 		 * @param id the peer's identifier
 		 */
-		inline void addPeer(IpAddress ip, PortNumber port, PeerID id);
+		void addPeer(PeerID id);
 
 		/**
 		 * Blocks until a single peer connects to this peer
@@ -539,21 +527,6 @@ class NetworkManager final
 		 * @param[in] arg the input parameter of the thread
 		 */
 		static void* run(void* arg);
-
-		/**
-		 * Close the sockets used in the Network unit
-		 */
-		inline void shutdown() {
-			// Shutdown the network
-			Network::closeSocket(m_listenSocket);
-
-			// Close the peers' sockets
-			for (Peer& p : m_peerList) {
-				if (p.id != m_localPeerID) {
-					p.destroy();
-				}
-			}
-		}
 
 		/**
 		 * Processes the received termination token
@@ -608,11 +581,21 @@ class NetworkManager final
 		 * @param packet the packet that will be sent
 		 */
 		inline void sendGeneralPacketToPeer(PeerID id, const GeneralPacket& packet) {
+#ifdef PROTECT_SEND_WITH_LOCK
 			pthread_mutex_lock(&m_peerList[id].outgoingMutex);
 			{
-				Network::sendGeneralPacketToSocket(m_peerList[id].outSocket, packet);
+#endif
+				MPI_Send(
+				    &packet,
+				    sizeof(GeneralPacket),
+				    MPI_BYTE,
+				    id,
+				    MpiTag::TAG_GENERAL_PACKET,
+				    MPI_COMM_WORLD);
+#ifdef PROTECT_SEND_WITH_LOCK
 			}
 			pthread_mutex_unlock(&m_peerList[id].outgoingMutex);
+#endif
 		}
 
 		/**
@@ -621,7 +604,13 @@ class NetworkManager final
 		 * @param packet the packet that will be sent
 		 */
 		inline void sendGeneralPacketToPeerUnsafe(PeerID id, const GeneralPacket& packet) {
-			Network::sendGeneralPacketToSocket(m_peerList[id].outSocket, packet);
+			MPI_Send(
+			    &packet,
+			    sizeof(GeneralPacket),
+			    MPI_BYTE,
+			    id,
+			    MpiTag::TAG_GENERAL_PACKET,
+			    MPI_COMM_WORLD);
 		}
 
 		/**
@@ -632,11 +621,21 @@ class NetworkManager final
 		 */
 		inline void sendToPeer(PeerID id, const Byte* const data, size_t size) {
 
+#ifdef PROTECT_SEND_WITH_LOCK
 			pthread_mutex_lock(&m_peerList[id].outgoingMutex);
 			{
-				Network::sendToSocket(m_peerList[id].outSocket, (const Byte*) data, size);
+#endif
+				MPI_Send(
+				    (const Byte*) data,
+				    size,
+				    MPI_BYTE,
+				    id,
+				    MpiTag::TAG_DATA,
+				    MPI_COMM_WORLD);
+#ifdef PROTECT_SEND_WITH_LOCK
 			}
 			pthread_mutex_unlock(&m_peerList[id].outgoingMutex);
+#endif
 		}
 
 		/**
@@ -646,7 +645,13 @@ class NetworkManager final
 		 * @param size the size of data
 		 */
 		inline void sendToPeerUnsafe(PeerID id, const Byte* const data, size_t size) {
-			Network::sendToSocket(m_peerList[id].outSocket, (const Byte*) data, size);
+			MPI_Send(
+			    (const Byte*) data,
+			    size,
+			    MPI_BYTE,
+			    id,
+			    MpiTag::TAG_DATA,
+			    MPI_COMM_WORLD);
 		}
 
 		/**
@@ -656,10 +661,14 @@ class NetworkManager final
 		 * @param size the size of the data
 		 */
 		inline void getDataFromPeer(PeerID id, Byte* to, size_t size) {
-			if (Network::receiveFromSocket(m_peerList[id].inSocket, to, size)) {
-				printf("Error: Socket closed when receiving Data from peer %u (size of data: %lu)\n", id, size);
-				exit(ERROR);
-			}
+			MPI_Recv(
+			    (void*) to,
+			    size,
+			    MPI_BYTE,
+			    id,
+			    MpiTag::TAG_DATA,
+			    MPI_COMM_WORLD,
+			    MPI_STATUS_IGNORE);
 		}
 
 		/**
@@ -811,20 +820,6 @@ class NetworkManager final
 		 * @param block the block that holds the multiple updates
 		 */
 		inline void handleMultUpdBlock(TID tid, size_t size, const MultUpdateEntry* block);
-
-		/**
-		 * @return the number of Kernels of the system when the user
-		 * does not specify the number of Kernels of the peer in the
-		 * peer-list file
-		 */
-		inline unsigned int getKernelsAutomatic();
-
-		/**
-		 * Broadcast the finalize message to the other's peers
-		 * @note this actually is called by the root peer which is responsible
-		 * for finalizing the system
-		 */
-		void broadcastFinalization();
 };
 
 #endif /* DISTRIBUTED_NETWORK_H_ */

@@ -26,12 +26,7 @@
  */
 
 #include "TSU.h"
-
-#ifdef USE_MPI_FREDDO
-#include "../Distributed/mpi_net/NetworkManager.h"
-#else
-#include "../Distributed/custom_net/NetworkManager.h"
-#endif
+#include "../Distributed/NetworkManager.h"
 
 /**
  * Creates the TSU object

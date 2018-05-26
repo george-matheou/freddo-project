@@ -36,12 +36,8 @@
 #include "../TSU/TSU.h"
 #include "DataForwardTable.h"
 #include <vector>
+#include "NetworkManager.h"
 
-#ifdef USE_MPI_FREDDO
-#include "mpi_net/NetworkManager.h"
-#else
-#include "custom_net/NetworkManager.h"
-#endif
 
 using namespace std;
 

@@ -39,39 +39,29 @@ CXXFLAGS 		= -Wall -O3 -std=c++11 -pthread $(EXTRA_OPTIONS) $(DEB_FLAGS) $(INCLU
 ############ Extra flags to give to the C compiler
 CFLAGS     		=
 ############ The compilers that will be used
-CXX_CNI			= g++
-CC_CNI			= gcc
-CXX_MPI			= $(MPI_BIN_PATH)mpic++
-CC_MPI			= $(MPI_BIN_PATH)mpicc
+CXX				= $(MPI_BIN_PATH)mpic++
+CC				= $(MPI_BIN_PATH)mpicc
 ############ Flags for creating libraries
 AR 				= ar
 ARFLAGS			= crs
 ############ The folder that contains the FREDDO libraries
 FREDDO_LIB		= ./$(FREDDO_LIB_NAME)
 
-include_dirs=Algorithm TSU TSU/SM TSU/SM/google Timer Distributed Distributed/custom_net Distributed/mpi_net Collections Collections/Matrix Collections/TileMatrix Collections/PTileMatrix
+include_dirs=Algorithm TSU TSU/SM TSU/SM/google Timer Distributed Collections Collections/Matrix Collections/TileMatrix Collections/PTileMatrix
 
 # Export variables to other makefiles
 export
 
-.DEFAULT_GOAL := cni
+.DEFAULT_GOAL := freddo
 
-# For Custom Network Interface support
-.PHONY: cni
-cni:
-	@echo "Creating FREDDO with custom network interface"
-	$(MAKE) -C $(BUILD_PATH) -f Makefile.mk net=cni  
+.PHONY: freddo
+freddo:
+	@echo "Creating FREDDO"
+	$(MAKE) -C $(BUILD_PATH) -f Makefile.mk
 
-# For MPI support
-.PHONY: mpi
-mpi:
-	@echo "Creating FREDDO with MPI. MPI path: " $(MPI_BIN_PATH)
-	$(MAKE) -C $(BUILD_PATH) -f Makefile.mk net=mpi
-
-# For the Custom network
 .PHONY: clean
 clean:
-	@echo "Cleaning the FREDDO framework"
+	@echo "Cleaning FREDDO"
 	$(MAKE) -C $(BUILD_PATH) -f Makefile.mk clean
 
 .PHONY: install

@@ -38,15 +38,7 @@
 #include "Distributed/DataForwardTable.h"
 #include "Distributed/DistScheduler.h"
 #include "freddo_config.h"
-
-#ifdef USE_MPI_FREDDO
-#include <mpi.h>
-#include "Distributed/mpi_net/NetworkManager.h"
-#else
-#include "Distributed/custom_net/PeerListReader.h"
-#include "Distributed/custom_net/NetworkManager.h"
-#endif
-
+#include "Distributed/NetworkManager.h"
 #include "Timer/Timer.h"
 #include <atomic>
 #include <unordered_map>
@@ -70,7 +62,7 @@ namespace ddm {
 	static freddo_config* freddoConfig;  // Configuration object. Will be created in the init functions or will be retrieved by the programmer through its programs.
 	static bool confRuntimeCreated = false;  // Indicates if the runtime creates the config file
 
-#ifdef USE_MPI_FREDDO
+
 	/**
 	 * Initialize FREDDO as Distributed System using MPI. The following steps are performed:
 	 * 1) MPI is initialized
@@ -165,84 +157,6 @@ namespace ddm {
 		// Add the PThreadID of main in the m_pidTokidMap hash-map. This is used for the initial updates.
 		m_pidTokidMap->add(pthread_self(), 0);  // This means that the initial updates will be sent to the Input Queue of Kernel-0
 	}
-
-#else
-	/**
-	 * Initialize FREDDO as Distributed System. The following steps are performed:
-	 * 1) The peer-list file is read
-	 * 2) The Network Manager Object is created
-	 * 3) The TSU object is created
-	 * 4)	The Kernels are spawned to the hardware cores
-	 * @param fileName the file that contains the peers' addresses and ports
-	 * @param port the port number of the peer
-	 * @param conf configuration object (optional)
-	 */
-	inline void init(string fileName, PortNumber port = DEFAULT_PORT, freddo_config* conf = nullptr) {
-
-		// If configuration is not set create a new object
-		if (conf == nullptr) {
-			conf = new freddo_config();
-			confRuntimeCreated = true;
-		}
-
-		freddoConfig = conf;  // Store the pointer of the configuration for later use
-
-		PeerListReader peerReader(fileName, DEFAULT_PORT);// Read the peers from the file
-		unsigned int numOfPeers = peerReader.getPeerEntries().size();
-		unsigned int localCores;
-
-		// If the number of peers is zero then something is wrong with the peer file, thus, we will run in single node
-		if (numOfPeers == 0) {
-			numOfPeers = 1;  // Set the number of peers to 1 since we have single node execution
-			m_isSingleNode = true;
-			m_localPeerID = 0;
-
-			// Find the local cores of the system
-			conf->disableNetManagerPinning();// This is because we are in single-node mode
-			conf->setKernelsFirstPinningCore(PINNING_PLACE::NEXT_TSU);// Pin first kernel next to TSU because distibuted execution failed
-			localCores = Auxiliary::getSystemNumCores() - 1;
-			cout << "Error with the peer list. FREDDO will run on a single node environment with " << localCores << " kernels.\n";
-		}
-		else if (numOfPeers >= 2) {
-			m_network = new NetworkManager(port, peerReader);
-
-			m_isSingleNode = false;
-			m_localPeerID = m_network->getPeerID();
-
-			// Find the local cores of the system
-			localCores = m_network->getLocalNumOfCores();
-
-			//m_tsuPinningCore = m_network->getMachineID() * (localCores + 2);
-			cout << "FREDDO will run on a distributed environment with " << numOfPeers << " peers.\n";
-		}
-		else {
-			cout << "Error: the peer list must contains at least two peers for distributed execution\n";
-			exit(ERROR);
-		}
-
-		m_numOfPeers = numOfPeers;
-		m_localNumOfKernels = localCores;
-
-		// Create the TSU object
-		m_tsu = new TSU(m_localNumOfKernels, conf->getTsuPinningCore(), numOfPeers, conf->isTsuPinningEnable());
-
-		// Start the Kernels
-		m_tsu->startKernels(conf->getFirstKernelPinningCore(), conf->isKernelsPinningEnable());
-
-		// Allocated the m_pidTokidMap
-		m_pidTokidMap = new SimpleHashTable<pthread_t, KernelID>(Auxiliary::pow2roundup(m_localNumOfKernels * 3));
-
-		/*
-		 *  For each Kernel create an association between its PThread ID and its Kernel ID.
-		 *  This is used in order to avoid putting the KernelIDs as DFunctions' arguments.
-		 */
-		for (UInt i = 0; i < m_localNumOfKernels; ++i)
-		m_pidTokidMap->add(m_tsu->getKernelPThreadID(i), m_tsu->getKernelID(i));
-
-		// Add the PThreadID of main in the m_pidTokidMap hash-map. This is used for the initial updates.
-		m_pidTokidMap->add(pthread_self(), 0);// This means that the initial updates will be sent to the Input Queue of Kernel-0
-	}
-#endif
 
 	/**
 	 * Initialize FREDDO as Single-Node System: The following steps are performed:
@@ -344,14 +258,12 @@ namespace ddm {
 		if (confRuntimeCreated)
 			delete freddoConfig;
 
-#ifdef USE_MPI_FREDDO
 		// Find if MPI is initialized
 		int mpi_finalized;
 		MPI_Finalized(&mpi_finalized);
 
 		if (!mpi_finalized)
 			MPI_Finalize();
-#endif
 	}
 
 	/**

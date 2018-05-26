@@ -18,28 +18,6 @@ vpath %.h $(include_dirs) # Specifies a list of directories that make should sea
 # Set the default goal of this makefile
 .DEFAULT_GOAL := all
 
-############ Include the Makefiles ############
-ifneq ($(MAKECMDGOALS),clean)
-	ifndef net
-		$(error net is not set. Use the following options: net=cni, net=mpi)
-	endif
-
-	ifeq ($(net),cni)
-		CXX=$(CXX_CNI)
-		CC=$(CC_CNI)
-		__net_imple:=custom
-		export __net_imple
-	else ifeq ($(net),mpi)
-		CXX=$(CXX_MPI)
-		CC=$(CC_MPI)
-		__net_imple:=mpi
-		CXXFLAGS+=-DUSE_MPI_FREDDO
-		export __net_imple
-	else
-		$(error net value is wrong. Use the following options: net=cni, net=mpi)
-	endif
-endif
-
 include ./freddo.mk
 include ./Distributed/dist.mk
 include ./Timer/timer.mk
@@ -58,7 +36,7 @@ libs: $(libraries) $(FREDDO_LIB)
 	
 ############ Create the FREDDO library
 $(FREDDO_LIB): $(objects)
-	@echo "Creating FREDDO library: " $@
+	@echo "Creating FREDDO: " $@
 	@$(AR) $(ARFLAGS) $@ $^
 	
 ############ Cleanup the exported files
@@ -97,3 +75,4 @@ $(eval $(call depend_rule,, ../))
 # For all the other directories
 $(foreach dir, $(target_dirs), $(eval $(call compile_rule, $(dir), ../$(dir))))
 $(foreach dir, $(target_dirs), $(eval $(call depend_rule, $(dir), ../$(dir))))
+
