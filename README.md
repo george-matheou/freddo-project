@@ -9,11 +9,11 @@ In case you have any publications resulting from FREDDO, please cite the followi
 
 ## Install/uninstall FREDDO
 
-### A) Install Prerequisites**
+### A) Install Prerequisites
 1. GCC compiler with C++11 support
 2. MPI library with multi-threading support. FREDDO has been tested with OpenMPI (Versions: 1.8.4, 2.0.1 and 2.1.1). However, we expect that FREDDO will work with any MPI version that supports multithreading.
 
-### B) Install FREDDO**
+### B) Install FREDDO
 - Go to *freddo* directory
 - ```make clean``` *(will clean the freddo project in the current directory)*
 - make MPI_BIN_PATH=<Path to the MPI's bin directory>
@@ -22,7 +22,7 @@ In case you have any publications resulting from FREDDO, please cite the followi
   - FREDDO library will be installed in **/usr/local** by default. If you want to change the installation directory you should set the *FREDDO_INSTALL_DIR* variable. For example:
     - ``make install FREDDO_INSTALL_DIR=../install_freddo``
 
-### C) Uninstall FREDDO**
+### C) Uninstall FREDDO
 - Go to *freddo* directory
 - ```make uninstall``` *(will remove the binaries/libraries and header files from the installation directory)*
   - If during installation you set a different installation directory than the default (i.e., **/usr/local**), you should set the *FREDDO_INSTALL_DIR* variable. For example:

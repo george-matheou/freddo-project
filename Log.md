@@ -9,5 +9,5 @@ First release of FREDDO. It utilizes two different network interfaces for inter-
 - Add documents (in docs directory) for helping users to install third-party libraries (e.g., MPI, LAPACK, etc.)
 - Boost library is not a prerequisite for installing FREDDO
 
-### Version 1.0.2
+### Version 1.1.0
 - Custom Network Interface (CNI) support is deprecated. CNI support is only available in V1.0.0 and V1.0.1 releases.
