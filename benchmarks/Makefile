@@ -44,7 +44,7 @@ DEB_FLAGS	 	= #-g
 # Test Flags
 TEST_FLAGS 		=  #-DTEST_DYNAMIC_SM
 
-CXXFLAGS 		= -Wall -DUSE_MPI_FREDDO -O3 -std=c++11 $(TEST_FLAGS) $(DEB_FLAGS) -I$(FREDDO_INC_DIR) -L$(FREDDO_LIB_DIR) $(FREDDO_LIBS)
+CXXFLAGS 		= -Wall -O3 -std=c++11 $(TEST_FLAGS) $(DEB_FLAGS) -I$(FREDDO_INC_DIR) -L$(FREDDO_LIB_DIR) $(FREDDO_LIBS)
 
 # Export all variables
 export
