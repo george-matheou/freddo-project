@@ -28,27 +28,28 @@ In case you have any publications resulting from FREDDO, please cite the followi
   - If during installation you set a different installation directory than the default (i.e., **/usr/local**), you should set the *FREDDO_INSTALL_DIR* variable. For example:
     - ``make uninstall FREDDO_INSTALL_DIR=../install_freddo``
 
-## Install and execute benchmarks
+## Compile and execute benchmarks
 
-### A) Install Prerequisite libraries
+### A) Install prerequisite libraries
 Install ScaLAPACK, LAPACK and PLASMA libraries following the instructions found in **docs** directory. The **SCALAPACK_LIB_DIR**, **LAPACK_DIR** and **PLASMA_DIR** should be specified, either by modifying the Makefile files or by using them directly along with the `make` commands, or by exporting them to the shell.  
 
-### C) Compile and execute benchmarks
-- Go to *./benchmarks/mpi* directory
-- Install benchmarks
-  - ```make clean```
-  - make MPI_BIN_PATH=<Path to the MPI's bin directory> (all benchmarks will be compiled and installed in bin directory)
-    - *e.g.*: ```make MPI_BIN_PATH=/opt/openmpi3/bin/```
-  - make &lt;X&gt; MPI_BIN_PATH=&lt;MPI bin directory&gt; (will compile and install the X benchmark)
-    - *e.g.*: ```make fibonacci MPI_BIN_PATH=/opt/openmpi3/bin/```
-  - **Notice:** if during FREDDO installation you set a different installation directory than the default (i.e., **/usr/local**), you should set the *FREDDO_INSTALL_DIR* variable, using absolute paths. For example:
-      - *e.g.*: `make MPI_BIN_PATH=/opt/openmpi3/bin/ FREDDO_INSTALL_DIR=~/Desktop/Workspace/freddo-project/install_freddo/`
-      - *e.g.*: `make fibonacci MPI_BIN_PATH=/opt/openmpi3/bin/ FREDDO_INSTALL_DIR=~/Desktop/Workspace/freddo-project/install_freddo/`
-- Execute a benchmark as a regular MPI application. Here we show how we run Cholesky using OpenMPI (V3).
+### B) Compile benchmarks
+- Go to *./benchmarks* directory
+- ```make clean```
+- make MPI_BIN_PATH=<Path to the MPI's bin directory> (all benchmarks will be compiled and installed in bin directory)
+  - *e.g.*: ```make MPI_BIN_PATH=/opt/openmpi3/bin/```
+- make &lt;X&gt; MPI_BIN_PATH=&lt;MPI bin directory&gt; (will compile and install the X benchmark)
+  - *e.g.*: ```make fibonacci MPI_BIN_PATH=/opt/openmpi3/bin/```
+- **Notice:** if during FREDDO installation you set a different installation directory than the default (i.e., **/usr/local**), you should set the *FREDDO_INSTALL_DIR* variable, using absolute paths. For example:
+    - *e.g.*: `make MPI_BIN_PATH=/opt/openmpi3/bin/ FREDDO_INSTALL_DIR=~/Desktop/Workspace/freddo-project/install_freddo/`
+    - *e.g.*: `make fibonacci MPI_BIN_PATH=/opt/openmpi3/bin/ FREDDO_INSTALL_DIR=~/Desktop/Workspace/freddo-project/install_freddo/`
+
+### C) Execute benchmarks
+- Execute a benchmark as an MPI application. Here we show how we run Cholesky using OpenMPI (V3).
   - Run Cholesky on the same machine using 2 MPI processes (not recommended, only for testing)
-    - ```mpirun -np 2 --npernode 2 ./bin/cholesky/cholesky_scalapack_with_coll 2 1024 32 1```
+    - ```/opt/openmpi3/bin/mpirun -np 2 --npernode 2 ./bin/cholesky/cholesky_scalapack_with_coll 2 1024 32 1```
   - Run Chokesky on a 4-node cluster (one MPI process per node)
-    - ```mpirun -np 4 --machinefile peers.txt  --npernode 1 ./bin/cholesky/cholesky_scalapack_with_coll 2 1024 32 1```
+    - ```/opt/openmpi3/bin/mpirun -np 4 --machinefile peers.txt  --npernode 1 ./bin/cholesky/cholesky_scalapack_with_coll 2 1024 32 1```
 
 ## References
 [1] Kyriacou, Costas, Paraskevas Evripidou, and Pedro Trancoso. "Data-driven multithreading using conventional microprocessors." IEEE Transactions on Parallel and Distributed Systems 17.10 (2006): 1176-1188.
