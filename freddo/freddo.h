@@ -117,7 +117,7 @@ namespace ddm {
 
 			// Find the local cores of the system
 			conf->disableNetManagerPinning();  // This is because we are in single-node mode
-			conf->setKernelsFirstPinningCore(PINNING_PLACE::NEXT_TSU);  // Pin first kernel next to TSU because distibuted execution failed
+			conf->setKernelsFirstPinningCore(PINNING_PLACE::NEXT_TSU);  // Pin first kernel next to TSU because distributed execution failed
 			localCores = Auxiliary::getSystemNumCores() - 1;
 			cout << "Error with the peer list. FREDDO will run on a single node environment with " << localCores << " kernels.\n";
 		}
