@@ -39,7 +39,7 @@ using namespace ddm;
 // Prototypes
 void initializeData(int matrixSize, int blockSize, DATA_TYPE ***A, DATA_TYPE ***B, DATA_TYPE ***C, DATA_TYPE ***S);
 void validateData(int matrixSize, int blockSize, DATA_TYPE **A, DATA_TYPE **B, DATA_TYPE **C, DATA_TYPE **S);
-inline void matmul(DATA_TYPE* A, DATA_TYPE* B, DATA_TYPE* C);
+void matmul(DATA_TYPE* A, DATA_TYPE* B, DATA_TYPE* C);
 
 // Constants
 #define ALPHA (0.0001)
@@ -201,7 +201,7 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-inline void matmul(DATA_TYPE* A, DATA_TYPE* B, DATA_TYPE* C) {
+void matmul(DATA_TYPE* A, DATA_TYPE* B, DATA_TYPE* C) {
 	unsigned int r, c, i;
 	for (r = 0; r < blockSize; ++r) {
 		for (c = 0; c < blockSize; ++c) {

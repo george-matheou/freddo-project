@@ -104,7 +104,7 @@ MultipleDThread2D *wrap_dt;
  * @param C - Input/Output
  * @param NB
  */
-inline void gemm_tile(TYPE *A, TYPE *B, TYPE *C, integer NB) {
+void gemm_tile(TYPE *A, TYPE *B, TYPE *C, integer NB) {
 char transa = 'N', transb = 'T';
 TYPE alpha = -1.0, beta = 1.0;
 
@@ -116,7 +116,7 @@ GEMM(&transa, &transb, &NB, &NB, &NB, &alpha, A, &NB, B, &NB, &beta, C, &NB);
  * @param C - Input/Output
  * @param NB Block Size
  */
-inline void syrk_tile(TYPE *A, TYPE *C, integer NB) {
+void syrk_tile(TYPE *A, TYPE *C, integer NB) {
 char uplo = 'L';
 char NT = 'N';
 TYPE alpha = -1.0, beta = 1.0;
@@ -128,7 +128,7 @@ SYRK(&uplo, &NT, &NB, &NB, &alpha, A, &NB, &beta, C, &NB);
  * @param A - Input/Output
  * @param NB
  */
-inline void potrf_tile(TYPE *A, integer NB) {
+void potrf_tile(TYPE *A, integer NB) {
 char LO = 'L';
 integer info;
 POTF(&LO, &NB, A, &NB, &info);
@@ -139,7 +139,7 @@ POTF(&LO, &NB, A, &NB, &info);
  * @param B - Input/Output
  * @param NB
  */
-inline void trsm_tile(TYPE *T, TYPE *B, long NB) {
+void trsm_tile(TYPE *T, TYPE *B, long NB) {
 char side = 'R';
 char LO = 'L';
 char transa = 'T';

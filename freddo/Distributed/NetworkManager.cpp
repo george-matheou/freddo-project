@@ -28,6 +28,7 @@
 #include "NetworkManager.h"
 #include "../DistRData.h"
 #include <stdio.h>
+#include <pthread.h>
 
 /**
  * It creates a network manager object

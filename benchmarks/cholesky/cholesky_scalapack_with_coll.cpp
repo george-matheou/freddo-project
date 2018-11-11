@@ -71,7 +71,7 @@ MultipleDThread2D *wrap_dt;
  * @param C - Input/Output
  * @param NB
  */
-inline void gemm_tile(BMatrix<TYPE> *A, BMatrix<TYPE> *B, BMatrix<TYPE> *C, integer NB) {
+void gemm_tile(BMatrix<TYPE> *A, BMatrix<TYPE> *B, BMatrix<TYPE> *C, integer NB) {
 	char transa = 'N', transb = 'T';
 	TYPE alpha = -1.0, beta = 1.0;
 
@@ -83,7 +83,7 @@ inline void gemm_tile(BMatrix<TYPE> *A, BMatrix<TYPE> *B, BMatrix<TYPE> *C, inte
  * @param C - Input/Output
  * @param NB Block Size
  */
-inline void syrk_tile(BMatrix<TYPE> *A, BMatrix<TYPE> *C, integer NB) {
+void syrk_tile(BMatrix<TYPE> *A, BMatrix<TYPE> *C, integer NB) {
 	char uplo = 'L';
 	char NT = 'N';
 	TYPE alpha = -1.0, beta = 1.0;
@@ -95,7 +95,7 @@ inline void syrk_tile(BMatrix<TYPE> *A, BMatrix<TYPE> *C, integer NB) {
  * @param A - Input/Output
  * @param NB
  */
-inline void potrf_tile(BMatrix<TYPE> *A, integer NB) {
+void potrf_tile(BMatrix<TYPE> *A, integer NB) {
 	char LO = 'L';
 	integer info;
 	POTF(&LO, &NB, A->top(), &NB, &info);
@@ -106,7 +106,7 @@ inline void potrf_tile(BMatrix<TYPE> *A, integer NB) {
  * @param B - Input/Output
  * @param NB
  */
-inline void trsm_tile(BMatrix<TYPE> *T, BMatrix<TYPE> *B, long NB) {
+void trsm_tile(BMatrix<TYPE> *T, BMatrix<TYPE> *B, long NB) {
 	char side = 'R';
 	char LO = 'L';
 	char transa = 'T';
