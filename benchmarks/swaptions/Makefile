@@ -6,7 +6,7 @@
 freddo:
 	make -C src -f Makefile.freddo clean
 	make -C src -f Makefile.freddo
-	cp src/swaptions_freddo ./bin
+	mv src/swaptions_freddo ./bin
 
 
 serial:
