@@ -27,13 +27,11 @@
 
 #include "GraphMemory.h"
 
-GraphMemory::GraphMemory()
-{
+GraphMemory::GraphMemory() {
 	m_graph.rehash(128);
 }
 
-GraphMemory::~GraphMemory()
-{
+GraphMemory::~GraphMemory() {
 
 }
 

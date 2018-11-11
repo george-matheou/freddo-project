@@ -71,7 +71,7 @@ namespace ddm {
 			 * @param[in] context the context of the DThread
 			 * @param[in] rdata a pointer to the rdata of the continuation function
 			 */
-			inline void update(RInstance parentInstance, void* rdata) const {
+			void update(RInstance parentInstance, void* rdata) const {
 				KernelID kernelID = getKernelIDofKernel();
 				m_tsu->updateWithData(kernelID, m_tid, parentInstance, rdata);
 			}
@@ -118,28 +118,28 @@ namespace ddm {
 			}
 
 			// Get my Arguments
-			inline T_ARGS getArgs() const {
+			T_ARGS getArgs() const {
 				return m_argument;
 			}
 
 			// Get my parent's instance/context
-			inline RInstance getParentInstance() const {
+			RInstance getParentInstance() const {
 				return m_parentInstance;
 			}
 
 			// Get my parent's RData
-			inline RData* getParentRData() const {
+			RData* getParentRData() const {
 				return m_parentData;
 			}
 
 			// Return the value to parent
-			inline void addReturnValue(T_RETURN value) {
+			void addReturnValue(T_RETURN value) {
 				volatile RInstance counter = m_counterRVs.fetch_add(1);
 				m_childrenRVs[counter] = value;
 			}
 
 			// Apply sum reduction in the Return Values of the children and return the result
-			inline T_RETURN sum_reduction() const {
+			T_RETURN sum_reduction() const {
 				T_RETURN result = 0;
 
 				for (unsigned int i = 0; i < m_numChilds; i++) {
@@ -149,7 +149,7 @@ namespace ddm {
 				return result;
 			}
 
-			inline T_RETURN* getChildrenReturnValues() {
+			T_RETURN* getChildrenReturnValues() {
 				return m_childrenRVs;
 			}
 
@@ -158,7 +158,7 @@ namespace ddm {
 			 * @param value
 			 * @param contDThread the ContinuationDThread
 			 */
-			inline void returnValueToParent(T_RETURN value, ContinuationDThread* contDThread) {
+			void returnValueToParent(T_RETURN value, ContinuationDThread* contDThread) {
 				if (m_parentData) {
 					m_parentData->addReturnValue(value);  // Store the child's return value to the parent's vector
 					contDThread->update(m_parentInstance, m_parentData);  // Update the continuation of the parent
@@ -168,7 +168,7 @@ namespace ddm {
 			/**
 			 * @return if this RData has parent
 			 */
-			inline bool hasParent() const {
+			bool hasParent() const {
 				return m_parentData != nullptr;
 			}
 
@@ -214,7 +214,7 @@ namespace ddm {
 			 * @param childRData[out] the created RData of this child
 			 * @return the context of the new child
 			 */
-			inline DistRecRes callChild(void* args, size_t argsSize, RInstance parentInstance, DistRData* parentRData, unsigned int numChilds) {
+			DistRecRes callChild(void* args, size_t argsSize, RInstance parentInstance, DistRData* parentRData, unsigned int numChilds) {
 				DistRecRes res;
 				DistRData* rdata = nullptr;
 
@@ -252,7 +252,7 @@ namespace ddm {
 			 * @param contDThread the ContinuationDThread
 			 * @param rdata the rdata of the child
 			 */
-			inline void returnValueToParent(void* value, size_t valueSize, ContinuationDThread* contDThread, DistRData* rdata) const {
+			void returnValueToParent(void* value, size_t valueSize, ContinuationDThread* contDThread, DistRData* rdata) const {
 				if (m_isSingleNode) {
 					if (rdata->getParentRData()) {
 						rdata->getParentRData()->addReturnValue(value);  // Store the child's return value to the parent's vector
@@ -279,12 +279,12 @@ namespace ddm {
 			}
 
 		private:
-			std::atomic<cntx_1D_t> m_nextChild;  // It counts the number of childs that are spawned by the DThread
+			std::atomic<cntx_1D_t> m_nextChild;  // It counts the number of children that are spawned by the DThread
 
 			/**
 			 * @return the next available and unique context value
 			 */
-			inline RInstance getNextInstance() {
+			RInstance getNextInstance() {
 				if (m_isSingleNode) {
 					return m_nextChild.fetch_add(1);  // Increase the counter to the next Context value
 				}
@@ -334,7 +334,7 @@ namespace ddm {
 			 * @return the context of the new child
 			 */
 			template <typename T_ARGS, typename T_RETURN>
-			inline RInstance callChild(RData<T_ARGS, T_RETURN>* rdata) {
+			RInstance callChild(RData<T_ARGS, T_RETURN>* rdata) {
 				KernelID kernelID = getKernelIDofKernel();
 				RInstance instance = getNextInstance();
 				m_tsu->updateWithData(kernelID, m_tid, instance, rdata);
@@ -347,7 +347,7 @@ namespace ddm {
 			/**
 			 * @return the next available and unique context value
 			 */
-			inline RInstance getNextInstance() {
+			RInstance getNextInstance() {
 				return m_nextChild.fetch_add(1);  // Increase the counter to the next Context value
 			}
 	};
@@ -424,21 +424,21 @@ namespace ddm {
 			/**
 			 * @return the Input Parameters of a specific instance
 			 */
-			inline T_PARAMS* getArguments(RInstance instance) {
+			T_PARAMS* getArguments(RInstance instance) {
 				return &get(instance).inArgs;
 			}
 
 			/**
 			 * @return the Return Value of a specific instance
 			 */
-			inline T_RETURN getReturnValue(RInstance instance) const {
+			T_RETURN getReturnValue(RInstance instance) const {
 				return m_returnValues[instance];
 			}
 
 			/**
 			 * @return the Return Value of the root instance
 			 */
-			inline T_RETURN getRootReturnValue() const {
+			T_RETURN getRootReturnValue() const {
 				return m_returnValues[0];
 			}
 
@@ -447,7 +447,7 @@ namespace ddm {
 			 * @param[in] parentInstance the parent instance of the recursive function
 			 * @param[in] inputParameters the input parameters of the recursive instance that will be called
 			 */
-			inline void callChild(RInstance parentInstance, T_PARAMS& inputParameters) {
+			void callChild(RInstance parentInstance, T_PARAMS& inputParameters) {
 				RInstance childContext = m_nextChild.fetch_add(1);  // Increase the counter to the next Context value
 
 				RData rdata_new;
@@ -467,7 +467,7 @@ namespace ddm {
 			 * @param[in] inputParameters the input parameters of the root
 			 * @note call this function once, before the run() function
 			 */
-			inline void callRoot(T_PARAMS& inputParameters) {
+			void callRoot(T_PARAMS& inputParameters) {
 				m_nextChild = 1;  // Set the next child number to 1
 
 				RData rdata_new;
@@ -482,7 +482,7 @@ namespace ddm {
 			/**
 			 * @return the Childs of an Instance
 			 */
-			inline vector<RInstance>& getMyChilds(RInstance instance) {
+			vector<RInstance>& getMyChilds(RInstance instance) {
 				return get(instance).myChilds;
 			}
 
@@ -491,7 +491,7 @@ namespace ddm {
 			 * @param instance the child instance
 			 * @param value the value that will be returned
 			 */
-			inline void returnValueToParent(RInstance instance, T_RETURN value) {
+			void returnValueToParent(RInstance instance, T_RETURN value) {
 				setReturnValue(instance, value);
 
 				// Inform my parent that I returned my value
@@ -503,14 +503,14 @@ namespace ddm {
 			 * Update the reduction instance of the recursive instance
 			 * @param instance the recursive instance
 			 */
-			inline void updateContinuationInstance(RInstance instance) {
+			void updateContinuationInstance(RInstance instance) {
 				reductionDThread->update(instance);  // Update directly the Continuation DThread
 			}
 
 			/**
 			 * @return the TID of the DThread
 			 */
-			inline TID getTID() const {
+			TID getTID() const {
 				return m_tid;
 			}
 
@@ -530,22 +530,22 @@ namespace ddm {
 			/**
 			 * Set the return value of a specific instance
 			 */
-			inline void setReturnValue(RInstance instance, T_RETURN value) {
+			void setReturnValue(RInstance instance, T_RETURN value) {
 				m_returnValues[instance] = value;
 			}
 
 			/**
 			 * @return the parent id of a specific instance
 			 */
-			inline RInstance getMyParentID(RInstance instance) {
+			RInstance getMyParentID(RInstance instance) {
 				return get(instance).myParent;
 			}
 
-			inline RData& get(UInt index) {
+			RData& get(UInt index) {
 				return m_staticData[index];
 			}
 
-			inline void set(UInt index, RData& data) {
+			void set(UInt index, RData& data) {
 				m_staticData[index] = data;
 			}
 	};

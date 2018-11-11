@@ -68,14 +68,14 @@ class InputQueue {
 		/**
 		 @return true if the Input Queue is empty
 		 */
-		inline bool isEmpty(void) const {
+		bool isEmpty(void) const {
 			return (m_head == m_tail);
 		}
 
 		/**
 		 @return true if the Input Queue is full
 		 */
-		inline bool isFull(void) const {
+		bool isFull(void) const {
 			const UInt next_tail = INCR_IQ_INDX(m_tail);
 
 			return (next_tail == m_head);
@@ -85,7 +85,7 @@ class InputQueue {
 		 Returns the Input Queue's head but does not remove the element
 		 @return a pointer to the head of the queue
 		 */
-		inline const IQ_Entry* peekHead(void) const {
+		const IQ_Entry* peekHead(void) const {
 			return (m_entries + m_head);
 		}
 
@@ -97,7 +97,7 @@ class InputQueue {
 		 @return true if the enqueue was completed or false if the queue was full
 		 @note Push on tail. The tail is only changed by producer (the Kernel)
 		 */
-		inline bool enqueue(TID tid, context_t context, context_t maxContext) {
+		bool enqueue(TID tid, context_t context, context_t maxContext) {
 			UInt curHead = m_head;  // Storing head in order to avoid queue full state if we remove the item from the queue immediately after we put it
 			UInt next_tail = INCR_IQ_INDX(m_tail);
 
@@ -121,7 +121,7 @@ class InputQueue {
 		 @return true if the enqueue was completed or false if the queue was full
 		 @note Push on tail. The tail is only changed by producer (the Kernel)
 		 */
-		inline bool enqueue(TID tid, context_t context) {
+		bool enqueue(TID tid, context_t context) {
 			UInt curHead = m_head;  // Storing head in order to avoid queue full state if we remove the item from the queue immediately after we put it
 			UInt next_tail = INCR_IQ_INDX(m_tail);
 
@@ -145,7 +145,7 @@ class InputQueue {
 		 @return true if the enqueue was completed or false if the queue was full
 		 @note Push on tail. The tail is only changed by producer (the Kernel)
 		 */
-		inline bool enqueue(TID tid, RInstance instance, void* data) {
+		bool enqueue(TID tid, RInstance instance, void* data) {
 			UInt curHead = m_head;  // Storing head in order to avoid queue full state if we remove the item from the queue immediately after we put it
 			UInt next_tail = INCR_IQ_INDX(m_tail);
 
@@ -168,7 +168,7 @@ class InputQueue {
 		 * @return true if the dequeue was completed or false if the queue was empty
 		 * @note Only the consumer (the TSU) can change the head
 		 */
-		inline bool dequeue(IQ_Entry* const item) {
+		bool dequeue(IQ_Entry* const item) {
 			if (m_head == m_tail)
 				return false;  // The queue is empty
 
@@ -183,7 +183,7 @@ class InputQueue {
 		 * @return true if the dequeue was completed or false if the queue was empty
 		 * @note Only the consumer can change the head
 		 */
-		inline bool popHead(void) {
+		bool popHead(void) {
 			if (m_head == m_tail)
 				return false;  // The queue is empty
 

@@ -72,7 +72,7 @@ class Kernel {
 		 * @param[in] nesting the ready DThread's nesting
 		 * @return true if the insertion was completed, otherwise false
 		 */
-		inline bool addReadyDThread(IFP ifp, TID tid, context_t context, Nesting nesting) {
+		bool addReadyDThread(IFP ifp, TID tid, context_t context, Nesting nesting) {
 			return m_outputQueue.enqueue(ifp, tid, context, nesting);
 		}
 
@@ -85,35 +85,35 @@ class Kernel {
 		 * @param[in] data the pointer to the arguments of the DThread
 		 * @return true if the insertion was completed, otherwise false
 		 */
-		inline bool addReadyDThread(IFP ifp, TID tid, context_t context, Nesting nesting, void* data) {
+		bool addReadyDThread(IFP ifp, TID tid, context_t context, Nesting nesting, void* data) {
 			return m_outputQueue.enqueue(ifp, tid, context, nesting, data);
 		}
 
 		/**
 		 * @return true if the Kernel's Output Queue is full
 		 */
-		inline bool isOutputQueueFull() const {
+		bool isOutputQueueFull() const {
 			return m_outputQueue.isFull();
 		}
 
 		/**
 		 * @return the size of the Kernel's Output Queue
 		 */
-		inline int getOutputQueueSize() const {
+		int getOutputQueueSize() const {
 			return m_outputQueue.getSize();
 		}
 
 		/**
 		 * @return true if the Kernel's Output Queue is empty
 		 */
-		inline bool isOutputQueueEmpty() const {
+		bool isOutputQueueEmpty() const {
 			return m_outputQueue.isEmpty();
 		}
 
 		/**
 		 * @return the Kernel's ID
 		 */
-		inline KernelID getKernelID() const {
+		KernelID getKernelID() const {
 			return m_kernelID;
 		}
 
@@ -121,14 +121,14 @@ class Kernel {
 		 * @return the PThread ID of the Kernel
 		 * @note use this after the Kernel starts
 		 */
-		inline pthread_t getPthreadID() const {
+		pthread_t getPthreadID() const {
 			return m_pthreadID;
 		}
 
 		/**
 		 * Stops the Kernels work
 		 */
-		inline void stop() {
+		void stop() {
 			m_isFinished = true;
 
 			// Wait the pthread to finish its execution
@@ -145,7 +145,7 @@ class Kernel {
 		 * @param[in] offset the offset of the memory segment
 		 * @param[in] size the size of the data segment
 		 */
-		inline void insertInDFTWithOffset(AddrID addrID, AddrOffset offset, size_t size) {
+		void insertInDFTWithOffset(AddrID addrID, AddrOffset offset, size_t size) {
 			if (m_dataForwardTable)
 				m_dataForwardTable->addWithOffset(addrID, offset, size);
 		}
@@ -157,7 +157,7 @@ class Kernel {
 		 * @param[in] index the index of the regular address in its data structure
 		 * @param[in] size the size of the data segment
 		 */
-		inline void insertInDFTWithRegAddress(AddrID addrID, MemAddr addr, size_t index, size_t size) {
+		void insertInDFTWithRegAddress(AddrID addrID, MemAddr addr, size_t index, size_t size) {
 			if (m_dataForwardTable)
 				m_dataForwardTable->addWithRegAddress(addrID, addr, index, size);
 		}
@@ -166,14 +166,14 @@ class Kernel {
 		 * @return the Data Forward Table of the Kernel or null if the we
 		 * are in the single node execution
 		 */
-		inline DataForwardTable* getDFT() {
+		DataForwardTable* getDFT() {
 			return m_dataForwardTable;
 		}
 
 		/**
 		 * Clears the Data Forward Table of the Kernel
 		 */
-		inline void clearDFT() {
+		void clearDFT() {
 			if (m_dataForwardTable)
 				m_dataForwardTable->clear();
 		}

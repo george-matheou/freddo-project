@@ -58,26 +58,26 @@ class freddo_config {
 		/**
 		 *  Set the core that the TSU will be pinned
 		 */
-		inline void setTsuPinningCore(unsigned int coreID) {
+		void setTsuPinningCore(unsigned int coreID) {
 			m_tsuPinningCore = coreID;
 		}
 
 		/**
 		 * @return the core that the TSU will be pinned
 		 */
-		inline unsigned int getTsuPinningCore() {
+		unsigned int getTsuPinningCore() {
 			return m_tsuPinningCore;
 		}
 
-		inline void enableTsuPinning() {
+		void enableTsuPinning() {
 			m_tsuPinningEnabled = true;
 		}
 
-		inline void disableTsuPinning() {
+		void disableTsuPinning() {
 			m_tsuPinningEnabled = false;
 		}
 
-		inline bool isTsuPinningEnable() {
+		bool isTsuPinningEnable() {
 			return m_tsuPinningEnabled;
 		}
 
@@ -85,25 +85,25 @@ class freddo_config {
 		/**
 		 * Enable network manager core pinning - only for distributed FREDDO implementation
 		 */
-		inline void enableNetManagerPinning() {
+		void enableNetManagerPinning() {
 			m_networkPinningEnabled = true;
 		}
 
 		/**
 		 * Disable network manager core pinning - only for distributed FREDDO implementation
 		 */
-		inline void disableNetManagerPinning() {
+		void disableNetManagerPinning() {
 			m_networkPinningEnabled = false;
 		}
 
-		inline bool isNetManagerPinningEnable() {
+		bool isNetManagerPinningEnable() {
 			return m_networkPinningEnabled;
 		}
 
 		/**
 		 * Set the pinning place/core of the Network Manager - only for distributed FREDDO implementation
 		 */
-		inline void setNetManagerPinningCore(PINNING_PLACE pinningPlace) {
+		void setNetManagerPinningCore(PINNING_PLACE pinningPlace) {
 			m_net_manager_pin_place = pinningPlace;
 
 			if (m_net_manager_pin_place != PINNING_PLACE::ON_TSU && m_net_manager_pin_place != PINNING_PLACE::NEXT_TSU) {
@@ -115,7 +115,7 @@ class freddo_config {
 		/**
 		 * Get the pinning place/core of the Network Manager - only for distributed FREDDO implementation
 		 */
-		inline unsigned int getNetManagerPinningCore() {
+		unsigned int getNetManagerPinningCore() {
 			if (m_net_manager_pin_place == PINNING_PLACE::ON_TSU) {
 				return m_tsuPinningCore;
 			}
@@ -132,21 +132,21 @@ class freddo_config {
 		/**
 		 * Set the place (core) where the first Kernel will be pinned
 		 */
-		inline void setKernelsFirstPinningCore(PINNING_PLACE pinningPlace) {
+		void setKernelsFirstPinningCore(PINNING_PLACE pinningPlace) {
 			m_kernels_starting_core_pin_place = pinningPlace;
 		}
 
 		/**
 		 * @return the place (core) where the first Kernel will be pinned
 		 */
-		inline PINNING_PLACE getKernelsFirstCorePlace() {
+		PINNING_PLACE getKernelsFirstCorePlace() {
 			return m_kernels_starting_core_pin_place;
 		}
 
 		/**
 		 * @return the core number where the first kernel will be pinned
 		 */
-		inline unsigned int getFirstKernelPinningCore() {
+		unsigned int getFirstKernelPinningCore() {
 			if (m_kernels_starting_core_pin_place == PINNING_PLACE::ON_TSU) {
 				return m_tsuPinningCore;
 			}
@@ -165,22 +165,22 @@ class freddo_config {
 			}
 		}
 
-		inline void enableKernelsPinning() {
+		void enableKernelsPinning() {
 			m_kernelsPinningEnabled = true;
 		}
 
-		inline void disableKernelsPinning() {
+		void disableKernelsPinning() {
 			m_kernelsPinningEnabled = false;
 		}
 
-		inline bool isKernelsPinningEnable() {
+		bool isKernelsPinningEnable() {
 			return m_kernelsPinningEnabled;
 		}
 
 		/**
 		 * Print the map of the pinning
 		 */
-		inline void printPinningMap() {
+		void printPinningMap() {
 			printf("TSU pinning enabled: %s | core set: %d\n", m_tsuPinningEnabled ? "true" : "false", m_tsuPinningCore);
 			printf("Network Manager pinning enabled: %s | core set: %d\n", m_networkPinningEnabled ? "true" : "false", getNetManagerPinningCore());
 			printf("Kernels pinning enabled: %s | Pinning core of the first Kernel: %d\n", m_kernelsPinningEnabled ? "true" : "false",

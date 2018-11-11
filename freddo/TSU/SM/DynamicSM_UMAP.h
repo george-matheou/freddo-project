@@ -52,7 +52,7 @@ using std::hash;
 #if !defined(CONTEXT_32_BIT) && !defined(CONTEXT_64_BIT)
 
 	template <class T>
-	inline void hashCombine(std::size_t& seed, const T& v)  {
+	void hashCombine(std::size_t& seed, const T& v)  {
 		std::hash<T> hasher;
 		seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
 	}
@@ -131,18 +131,18 @@ class DynamicSM
 		#if defined (CONTEXT_64_BIT) || defined (CONTEXT_32_BIT)
 				#if defined (USE_DYNAMIC_SM_UMAP)
 					std::unordered_map<context_t, ReadyCount>::iterator m_got; 												 	// Iterator used for the unordered map
-					std::unordered_map<context_t, ReadyCount> m_SM;																		 	// A dynamic SM implemented as an unordered map
+					std::unordered_map<context_t, ReadyCount> m_SM;																// A dynamic SM implemented as an unordered map
 				#else
 					boost::unordered_map<context_t, ReadyCount>::iterator m_got; 												// Iterator used for the boost unordered map
-					boost::unordered_map<context_t, ReadyCount> m_SM;																		// A dynamic SM implemented as a boost unordered map
+					boost::unordered_map<context_t, ReadyCount> m_SM;															// A dynamic SM implemented as a boost unordered map
 				#endif
 		#else
 				#if defined (USE_DYNAMIC_SM_UMAP)
-					std::unordered_map<context_t, ReadyCount, ContextHasher>::iterator m_got; 					// Iterator used for the unordered map
-					std::unordered_map<context_t, ReadyCount, ContextHasher> m_SM;											// A dynamic SM implemented as an unordered map
+					std::unordered_map<context_t, ReadyCount, ContextHasher>::iterator m_got; 									// Iterator used for the unordered map
+					std::unordered_map<context_t, ReadyCount, ContextHasher> m_SM;												// A dynamic SM implemented as an unordered map
 				#else
-					boost::unordered_map<context_t, ReadyCount, ContextHasher>::iterator m_got; 				// Iterator used for the boost unordered map
-					boost::unordered_map<context_t, ReadyCount, ContextHasher> m_SM;										// A dynamic SM implemented as a boost unordered map
+					boost::unordered_map<context_t, ReadyCount, ContextHasher>::iterator m_got; 								// Iterator used for the boost unordered map
+					boost::unordered_map<context_t, ReadyCount, ContextHasher> m_SM;											// A dynamic SM implemented as a boost unordered map
 				#endif
 		#endif
 

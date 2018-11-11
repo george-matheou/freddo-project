@@ -57,7 +57,7 @@ class StaticSM {
 		 * @note Before the update operation check if the Context is valid. Also check if the
 		 * Ready Count of the specific Context is not already Zero.
 		 */
-		inline void update(context_t context) {
+		void update(context_t context) {
 
 #ifdef TSU_COLLECT_STATISTICS
 			m_numberOfUpdates++;
@@ -93,7 +93,7 @@ class StaticSM {
 		 * @param context the Context attribute
 		 * @return the Ready Count value
 		 */
-		inline ReadyCount getReadyCount(context_t context) const {
+		ReadyCount getReadyCount(context_t context) const {
 			size_t index = 0;
 
 			switch (m_nesting) {
@@ -124,7 +124,7 @@ class StaticSM {
 		 * @param context the Context attribute
 		 * @return true if the Context is valid
 		 */
-		inline bool isContextValid(context_t context) const {
+		bool isContextValid(context_t context) const {
 			switch (m_nesting) {
 				case Nesting::ONE:
 					case Nesting::CONTINUATION:

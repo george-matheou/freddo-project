@@ -89,7 +89,7 @@ class TemplateMemory {
 		 * @param[in] outerRange the range of the outer Context
 		 * @return a pointer to the new template or nullptr if the insertion fails
 		 */
-		inline ThreadTemplate* addTemplate(IFP ifp, TID tid, Nesting nesting, ReadyCount readyCount, UInt innerRange, UInt middleRange, UInt outerRange) {
+		ThreadTemplate* addTemplate(IFP ifp, TID tid, Nesting nesting, ReadyCount readyCount, UInt innerRange, UInt middleRange, UInt outerRange) {
 
 			if (tid < 0 || tid >= TM_SIZE || m_entries[tid].isUsed)
 				return nullptr;
@@ -127,7 +127,7 @@ class TemplateMemory {
 		 * @param[in] readyCount the Dthread's Ready Count, i.e. the number of its producer-threads
 		 * @return a pointer to the new template or nullptr if the insertion fails
 		 */
-		inline ThreadTemplate* addTemplate(IFP ifp, TID tid, Nesting nesting, ReadyCount readyCount) {
+		ThreadTemplate* addTemplate(IFP ifp, TID tid, Nesting nesting, ReadyCount readyCount) {
 
 			if (tid < 0 || tid >= TM_SIZE || m_entries[tid].isUsed)
 				return nullptr;
@@ -171,7 +171,7 @@ class TemplateMemory {
 		 * @param[in] tid the Dthread's id.
 		 * @return true if the template removed successfully, otherwise false
 		 */
-		inline bool removeTemplate(TID tid) {
+		 bool removeTemplate(TID tid) {
 
 			if (tid < 0 || tid >= TM_SIZE)
 				return false;
@@ -202,7 +202,7 @@ class TemplateMemory {
 		 * @param[in] tid the DThread's id
 		 * @return a pointer to the Thread Template if the search was successful, otherwise nullptr
 		 */
-		inline ThreadTemplate* getTemplate(TID tid) const {
+		ThreadTemplate* getTemplate(TID tid) const {
 			if (tid < 0 || tid >= TM_SIZE || !m_entries[tid].isUsed)
 				return nullptr;
 
@@ -213,14 +213,14 @@ class TemplateMemory {
 		 * @param[in] tid the DThread's id
 		 * @return true if the Template Memory contains the tid, otherwise false
 		 */
-		inline bool contains(TID tid) const {
+		bool contains(TID tid) const {
 			return (tid >= 0 && tid < TM_SIZE && m_entries[tid].isUsed);
 		}
 
 		/**
 		 * Print the contents of the TM's Used Entries
 		 */
-		inline void printUsedEntries() const {
+		void printUsedEntries() const {
 			for (UInt i = 0; i < TM_SIZE; ++i)
 				if (m_entries[i].isUsed) {
 					printf("TID: %d, Nesting: %d, RC: %d\n", i, m_entries[i].nesting, m_entries[i].readyCount);

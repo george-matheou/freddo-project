@@ -68,13 +68,13 @@ namespace ddm {
 	 * 1) MPI is initialized
 	 * 2) The Network Manager Object is created
 	 * 3) The TSU object is created
-	 * 4)	The Kernels are spawned to the hardware cores
+	 * 4) The Kernels are spawned to the hardware cores
 	 * @param argc
 	 * @param argv
 	 * @param numOfKernels the number of Kernels
 	 * @param conf configuration object (optional)
 	 */
-	inline void init(int *argc, char ***argv, unsigned int numOfKernels, freddo_config* conf = nullptr) {
+	void init(int *argc, char ***argv, unsigned int numOfKernels, freddo_config* conf = nullptr) {
 		// If configuration is not set create a new object
 		if (conf == nullptr) {
 			conf = new freddo_config();
@@ -164,7 +164,7 @@ namespace ddm {
 	 * 2)	The Kernels are spawned to the hardware cores
 	 * @param[in] kernels the number of the TSU's Kernels. A Kernel is a POSIX thread that executes the DThreads.
 	 */
-	inline void init(unsigned int kernels, freddo_config* conf = nullptr) {
+	void init(unsigned int kernels, freddo_config* conf = nullptr) {
 		// If configuration is not set create a new object with default values
 		if (conf == nullptr) {
 			conf = new freddo_config();
@@ -203,7 +203,7 @@ namespace ddm {
 	/**
 	 * @return the KernelID of the currently executed Kernel
 	 */
-	static inline KernelID getKernelIDofKernel() {
+	static KernelID getKernelIDofKernel() {
 		KernelID* temp = m_pidTokidMap->getValue(pthread_self());
 
 		if (!temp) {
@@ -217,7 +217,7 @@ namespace ddm {
 	/**
 	 * Finalize the DDM Dependency Graph, i.e store the DThreads that their RC is not set, using the Consumer Lists
 	 */
-	inline void finalizeDependencyGraph() {
+	void finalizeDependencyGraph() {
 		m_tsu->finalizeDependencyGraph();
 	}
 
@@ -227,7 +227,7 @@ namespace ddm {
 	 *	and no pending ready DThreads (the Output Queues are empty). As such, you should add the DThreads you
 	 *	need and send the initial updates before you call this function.
 	 */
-	inline void run(void) {
+	void run(void) {
 		finalizeDependencyGraph();  // Find the RC values of the Pending Thread Templates
 
 		if (m_isSingleNode)
@@ -240,7 +240,7 @@ namespace ddm {
 	 *	It stops the Kernels and the Network Manager, and releases the memory allocated by the DDM.
 	 *	@note if any function is used after calling this function, probably a segmentation fault will occur
 	 */
-	inline void finalize() {
+	void finalize() {
 		m_tsu->stopKernels();
 
 		if (!m_isSingleNode)
@@ -269,28 +269,28 @@ namespace ddm {
 	/**
 	 * @return the number of kernels that run on the system
 	 */
-	inline UInt getKernelNum() {
+	UInt getKernelNum() {
 		return m_tsu->getKernelNum();
 	}
 
 	/**
 	 * @return the current time in seconds
 	 */
-	inline time_count getCurTime() {
+	time_count getCurTime() {
 		return gtod_micro();
 	}
 
 	/**
 	 * @return the number of the physical cores (i.e. the hardware threads) of the system
 	 */
-	inline UInt getSystemNumCores() {
+	UInt getSystemNumCores() {
 		return Auxiliary::getSystemNumCores();
 	}
 
 	/**
 	 * @return the number of Kernels of the entire Distributed System
 	 */
-	inline UInt getDistSystemKernelNum() {
+	UInt getDistSystemKernelNum() {
 		return m_network->getTotalNumOfCores();
 	}
 
@@ -299,7 +299,7 @@ namespace ddm {
 	 * call this function after the run() function or after calling the finalizeDependencyGraph() function
 	 * @note use this function only for debug purposes
 	 */
-	inline void printDependencyGraph() {
+	void printDependencyGraph() {
 		printf("\n============= DDM Dependency Graph =============\n");
 		m_tsu->printDThreadsInfo();
 		printf("================================================\n");
@@ -337,14 +337,14 @@ namespace ddm {
 	 * Indicates if the node is the root of the distributed system
 	 * @return true if is the root, otherwise false
 	 */
-	inline bool isRoot() {
+	bool isRoot() {
 		return (m_localPeerID == ROOT_PEER_ID);
 	}
 
 	/**
 	 * Returns the ID of the Peer
 	 */
-	inline PeerID getPeerID() {
+	PeerID getPeerID() {
 		return m_localPeerID;
 	}
 
@@ -353,7 +353,7 @@ namespace ddm {
 	 * @param address the address that is going to be stored
 	 * @return the ID of the address
 	 */
-	inline AddrID addInGAS(void* address) {
+	AddrID addInGAS(void* address) {
 		return m_GAS.addAddress(address);
 	}
 
@@ -363,7 +363,7 @@ namespace ddm {
 	 * @return the ID of the address
 	 */
 	template <typename T>
-	inline void addTileMatrixInGAS(TileMatrix<T>& tm) {
+	void addTileMatrixInGAS(TileMatrix<T>& tm) {
 		//SAFE_LOG("===> Adding address of TileMatrix in GAS: " << (void *) tm.top());
 		//SAFE_LOG("===> Address of first data block: " << (void *) tm.getTileDataAddress(0, 0));
 		// In GAS we are adding the address of the 2D array (i.e. the Tiled Array) where each element is a BMatrix Object
@@ -377,7 +377,7 @@ namespace ddm {
 	 * @return the ID of the address
 	 */
 	template <typename T>
-	inline void addPTileMatrixInGAS(PTileMatrix<T>* tm, GASOnReceiveFunction receiveFunc) {
+	void addPTileMatrixInGAS(PTileMatrix<T>* tm, GASOnReceiveFunction receiveFunc) {
 
 		AddrID id = m_GAS.addAddress(GASAddressType::GAS_PARTITIONED_TMATRIX, (void *) tm, receiveFunc);  // We are adding the address of the first tile (T*)
 		tm->setGasID(id);
@@ -392,7 +392,7 @@ namespace ddm {
 	 * @param[in] size the size of the data segment
 	 * @note call this function before the updates in the DThread's code
 	 */
-	inline void addModifiedSegmentInGAS(AddrID addrID, void* address, size_t size) {
+	void addModifiedSegmentInGAS(AddrID addrID, void* address, size_t size) {
 		if (m_isSingleNode)
 			return;
 
@@ -409,7 +409,7 @@ namespace ddm {
 	 * @note call this function before the updates in the DThread's code
 	 */
 	template <typename T>
-	inline void addModifiedTileInGAS(TileMatrix<T>& tm, size_t row, size_t col) {
+	void addModifiedTileInGAS(TileMatrix<T>& tm, size_t row, size_t col) {
 		if (m_isSingleNode)
 			return;
 
@@ -427,7 +427,7 @@ namespace ddm {
 	 * @note call this function before the updates in the DThread's code
 	 */
 	template <typename T>
-	inline void addModifiedTileInGAS(PTileMatrix<T>& tm, size_t row, size_t col) {
+	void addModifiedTileInGAS(PTileMatrix<T>& tm, size_t row, size_t col) {
 		if (m_isSingleNode)
 			return;
 
@@ -446,7 +446,7 @@ namespace ddm {
 	 * @param kernelID the Kernel ID
 	 * @param id the Peer's ID
 	 */
-	inline void sendModifiedData(KernelID kernelID, PeerID id) {
+	void sendModifiedData(KernelID kernelID, PeerID id) {
 		if (m_isSingleNode || m_localPeerID == id)
 			return;
 
@@ -471,7 +471,7 @@ namespace ddm {
 	 * @param[in] address the address of the data block
 	 * @param[in] size the size of the data block
 	 */
-	inline void sendDataToRoot(AddrID id, void* address, size_t size) {
+	void sendDataToRoot(AddrID id, void* address, size_t size) {
 		if (m_isSingleNode || m_localPeerID == ROOT_PEER_ID)
 			return;
 
@@ -485,7 +485,7 @@ namespace ddm {
 	 * @param[in] col the column of the tile
 	 */
 	template <typename T>
-	inline void sendTileToRoot(TileMatrix<T>& tm, size_t row, size_t col) {
+	void sendTileToRoot(TileMatrix<T>& tm, size_t row, size_t col) {
 		if (m_isSingleNode || m_localPeerID == ROOT_PEER_ID)
 			return;
 
@@ -500,7 +500,7 @@ namespace ddm {
 	 * @param[in] col the column of the tile
 	 */
 	template <typename T>
-	inline void sendTileToRoot(PTileMatrix<T>& tm, size_t row, size_t col) {
+	void sendTileToRoot(PTileMatrix<T>& tm, size_t row, size_t col) {
 		if (m_isSingleNode || m_localPeerID == ROOT_PEER_ID)
 			return;
 
@@ -514,14 +514,14 @@ namespace ddm {
 	/**
 	 * @return the number of peers of the Distributed System
 	 */
-	inline unsigned int getNumberOfPeers() {
+	unsigned int getNumberOfPeers() {
 		return m_numOfPeers;
 	}
 
 	/**
 	 * Clears the Data Forward Table of a specific Kernel
 	 */
-	inline void clearDataForwardTable() {
+	void clearDataForwardTable() {
 		if (m_isSingleNode)
 			return;
 

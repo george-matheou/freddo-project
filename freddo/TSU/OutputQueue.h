@@ -69,14 +69,14 @@ class OutputQueue {
 		/**
 		 @return true if the Output Queue is empty
 		 */
-		inline bool isEmpty(void) const {
+		bool isEmpty(void) const {
 			return (m_head == m_tail);
 		}
 
 		/**
 		 @return true if the Output Queue is full
 		 */
-		inline bool isFull(void) const {
+		bool isFull(void) const {
 			const UInt next_tail = INCR_OQ_INDX(m_tail);
 
 			return (next_tail == m_head);
@@ -86,14 +86,14 @@ class OutputQueue {
 		 Returns the Output Queue's head but does not remove the element
 		 @return a pointer to the head of the queue
 		 */
-		inline const OQ_Entry* peekHead(void) const {
+		const OQ_Entry* peekHead(void) const {
 			return (m_entries + m_head);
 		}
 
 		/**
 		 @return the number of entries in the Output Queue
 		 */
-		inline int getSize() const {
+		int getSize() const {
 			if (m_head <= m_tail)
 				return m_tail - m_head;
 			else
@@ -109,7 +109,7 @@ class OutputQueue {
 		 @return true if the enqueue was completed or false if the queue was full
 		 @note Push on tail. The tail is only changed by producer (the Kernel)
 		 */
-		inline bool enqueue(IFP ifp, TID tid, context_t context, Nesting nesting) {
+		bool enqueue(IFP ifp, TID tid, context_t context, Nesting nesting) {
 			UInt curHead = m_head;  // Storing head in order to avoid queue full state if we remove the item from the queue immediately after we put it
 			UInt next_tail = INCR_OQ_INDX(m_tail);
 
@@ -135,7 +135,7 @@ class OutputQueue {
 		 @return true if the enqueue was completed or false if the queue was full
 		 @note Push on tail. The tail is only changed by producer (the Kernel)
 		 */
-		inline bool enqueue(IFP ifp, TID tid, context_t context, Nesting nesting, void* data) {
+		bool enqueue(IFP ifp, TID tid, context_t context, Nesting nesting, void* data) {
 			UInt curHead = m_head;  // Storing head in order to avoid queue full state if we remove the item from the queue immediately after we put it
 			UInt next_tail = INCR_OQ_INDX(m_tail);
 
@@ -158,7 +158,7 @@ class OutputQueue {
 		 * @return true if the dequeue was completed or false if the queue was empty
 		 * @note Only the consumer (the TSU) can change the head
 		 */
-		inline bool dequeue(OQ_Entry* const item) {
+		bool dequeue(OQ_Entry* const item) {
 			if (m_head == m_tail)
 				return false;  // The queue is empty
 
@@ -173,7 +173,7 @@ class OutputQueue {
 		 * @return true if the dequeue was completed or false if the queue was empty
 		 * @note Only the consumer can change the head
 		 */
-		inline bool popHead(void) {
+		bool popHead(void) {
 			if (m_head == m_tail)
 				return false;  // The queue is empty
 

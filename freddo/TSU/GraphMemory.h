@@ -49,12 +49,11 @@ class GraphMemory
 		 * @param tid the DThread's TID
 		 * @param consumers
 		 */
-		inline void insert(TID tid, const ConsumerList consumers)
-		    {
+		void insert(TID tid, const ConsumerList consumers) {
 			auto got = m_graph.find(tid);
 
 			if (got == m_graph.end())
-				m_graph.insert( { tid, consumers });
+				m_graph.insert({ tid, consumers });
 			else
 				got->second = consumers;
 		}
@@ -63,14 +62,14 @@ class GraphMemory
 		 * Removes the Consumer List of a DThread (if exists)
 		 * @param tid the Thread ID of the DThread
 		 */
-		inline void remove(TID tid) {
+		void remove(TID tid) {
 			m_graph.erase(tid);
 		}
 
 		/**
 		 * @return the consumers of the given tid
 		 */
-		inline ConsumerList* getConsumers(TID tid) {
+		ConsumerList* getConsumers(TID tid) {
 			auto got = m_graph.find(tid);
 
 			if (got == m_graph.end())
@@ -79,13 +78,11 @@ class GraphMemory
 				return &(got->second);
 		}
 
-		std::unordered_map<TID, ConsumerList>::iterator begin()
-		{
+		std::unordered_map<TID, ConsumerList>::iterator begin() {
 			return m_graph.begin();
 		}
 
-		std::unordered_map<TID, ConsumerList>::iterator end()
-		{
+		std::unordered_map<TID, ConsumerList>::iterator end() {
 			return m_graph.end();
 		}
 

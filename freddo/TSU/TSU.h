@@ -84,7 +84,7 @@ class TSU
 		/**
 		 * @return the number of kernels that are handled by the TSU
 		 */
-		inline UInt getKernelNum() {
+		UInt getKernelNum() {
 			return m_kernelsNum;
 		}
 
@@ -93,7 +93,7 @@ class TSU
 		 * @param[in] tid the DThreads ID
 		 * @note the tid should exist in the Template Memory, otherwise segmentation fault will occur
 		 */
-		inline Nesting getDThreadNesting(TID tid) {
+		Nesting getDThreadNesting(TID tid) {
 			ThreadTemplate* threadTemplate = m_TemplateMemory.getTemplate(tid);
 
 			if (threadTemplate)
@@ -109,7 +109,7 @@ class TSU
 		 *	and no pending ready DThreads (the Output Queues are empty). As such, you should add the DThreads you
 		 *	need and send the initial updates before you call this function.
 		 */
-		inline void runSingleNode(void) {
+		void runSingleNode(void) {
 			// Local Variables
 			UInt i;
 			bool isFinished;
@@ -141,7 +141,7 @@ class TSU
 		 * @param[in] outerRange the range of the outer Context
 		 * @return the TID of the created DThread
 		 */
-		inline TID addDThread(IFP ifp, Nesting nesting, ReadyCount readyCount, UInt innerRange, UInt middleRange, UInt outerRange) {
+		TID addDThread(IFP ifp, Nesting nesting, ReadyCount readyCount, UInt innerRange, UInt middleRange, UInt outerRange) {
 
 			if (readyCount <= 0) {
 				printf("Error while inserting a DThread => The readyCount has to be greater that zero.\n");
@@ -186,7 +186,7 @@ class TSU
 		 * @param[in] readyCount the Dthread's Ready Count, i.e. the number of its producer-threads
 		 * @return the TID of the created DThread
 		 */
-		inline TID addDThread(IFP ifp, Nesting nesting, ReadyCount readyCount) {
+		TID addDThread(IFP ifp, Nesting nesting, ReadyCount readyCount) {
 			if (readyCount <= 0) {
 				printf("Error while inserting a DThread => The readyCount has to be greater that zero.\n");
 				exit(ERROR);
@@ -227,7 +227,7 @@ class TSU
 		 * @param[in] outerRange the range of the outer Context
 		 * @return the TID of the created DThread
 		 */
-		inline TID addDThread(IFP ifp, Nesting nesting, UInt innerRange, UInt middleRange, UInt outerRange) {
+		TID addDThread(IFP ifp, Nesting nesting, UInt innerRange, UInt middleRange, UInt outerRange) {
 
 			if (innerRange <= 0 || middleRange <= 0 || outerRange <= 0) {
 				printf("Error while inserting a DThread => The ranges of the Contexts have to be greater that zero.\n");
@@ -271,7 +271,7 @@ class TSU
 		 * @param[in] nesting	the Dthread's nesting
 		 * @return the TID of the created DThread
 		 */
-		inline TID addDThread(IFP ifp, Nesting nesting) {
+		TID addDThread(IFP ifp, Nesting nesting) {
 			PendingThreadTemplate p;
 			p.ifp = ifp;
 			p.nesting = nesting;
@@ -301,7 +301,7 @@ class TSU
 		/**
 		 * Removes the DThread from the TSU
 		 */
-		inline void removeDThread(TID tid) {
+		void removeDThread(TID tid) {
 
 			LOCK_TT();
 			if (!m_TemplateMemory.removeTemplate(tid)) {
@@ -318,7 +318,7 @@ class TSU
 		/**
 		 * Decrements the Ready Count (RC) of a DThread which has Nesting-0
 		 */
-		inline void simpleUpdate(KernelID kernelID, TID tid) {
+		void simpleUpdate(KernelID kernelID, TID tid) {
 			// If the IQ is full, put it in the Kernel's Unlimited IQ
 			if (!m_InputQueues[kernelID]->enqueue(tid, CREATE_N0())) {
 				IQ_Entry iqEntry;
@@ -340,7 +340,7 @@ class TSU
 		 * Decrements the Ready Count (RC) of a DThread with Nesting >= 1
 		 * @param[in] context the context of the DThread
 		 */
-		inline void update(KernelID kernelID, TID tid, context_t context) {
+		void update(KernelID kernelID, TID tid, context_t context) {
 
 			// If the IQ is full, put it in the Kernel's Unlimited IQ
 			if (!m_InputQueues[kernelID]->enqueue(tid, context)) {
@@ -364,7 +364,7 @@ class TSU
 		 * @param[in] instance the instance/context of the DThread
 		 * @param[in] data the pointer to the data of the DThread
 		 */
-		inline void updateWithData(KernelID kernelID, TID tid, RInstance instance, void* data) {
+		void updateWithData(KernelID kernelID, TID tid, RInstance instance, void* data) {
 			// If the IQ is full, put it in the Kernel's Unlimited IQ
 			if (!m_InputQueues[kernelID]->enqueue(tid, instance, data)) {
 				IQ_Entry iqEntry;
@@ -388,7 +388,7 @@ class TSU
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void update(KernelID kernelID, TID tid, context_t context, context_t maxContext) {
+		void update(KernelID kernelID, TID tid, context_t context, context_t maxContext) {
 
 			if (!m_InputQueues[kernelID]->enqueue(tid, context, maxContext)) {
 				IQ_Entry iqEntry;
@@ -412,7 +412,7 @@ class TSU
 		 * @param[in] kernelID	the Kernel ID
 		 * @param[in] tid the Thread ID of the DThread
 		 */
-		inline void updateAllConsSimple(KernelID kernelID, TID tid) {
+		void updateAllConsSimple(KernelID kernelID, TID tid) {
 			// Get the Consumers of the DThread
 			ConsumerList* cons = getConsumers(tid);
 
@@ -431,7 +431,7 @@ class TSU
 		 * @param[in] tid the Thread ID of the DThread
 		 * @param[in] context the context of the DThread
 		 */
-		inline void updateAllCons(KernelID kernelID, TID tid, context_t context) {
+		void updateAllCons(KernelID kernelID, TID tid, context_t context) {
 			// Get the Consumers of the DThread
 			ConsumerList* cons = getConsumers(tid);
 
@@ -451,7 +451,7 @@ class TSU
 		 * @param[in] context the context of the DThread
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void updateAllCons(KernelID kernelID, TID tid, context_t context, context_t maxContext) {
+		void updateAllCons(KernelID kernelID, TID tid, context_t context, context_t maxContext) {
 			// Get the Consumers of the DThread
 			ConsumerList* cons = getConsumers(tid);
 
@@ -467,7 +467,7 @@ class TSU
 		/**
 		 * @return the consumers of the given Thread ID. If the tid has not consumers, nullptr is returned.
 		 */
-		inline ConsumerList* getConsumers(TID tid) {
+		ConsumerList* getConsumers(TID tid) {
 			return m_GraphMemory.getConsumers(tid);
 		}
 
@@ -476,7 +476,7 @@ class TSU
 		 * @param tid the DThread's Thread ID
 		 * @param consList the Thread IDs of the DThread's consumers
 		 */
-		inline void setConsumers(TID tid, ConsumerList consList) {
+		void setConsumers(TID tid, ConsumerList consList) {
 			m_GraphMemory.insert(tid, consList);
 		}
 
@@ -484,7 +484,7 @@ class TSU
 		 * @param[in] number the Kernel number
 		 * @return the PThread ID of the given Kernel
 		 */
-		inline pthread_t getKernelPThreadID(UInt number) {
+		pthread_t getKernelPThreadID(UInt number) {
 			if (number < 0 || number >= m_kernelsNum) {
 				printf("Error in function getKernelPThreadID => The Kernel number is wrong");
 				exit(ERROR);
@@ -497,7 +497,7 @@ class TSU
 		 * @param[in] number the Kernel number
 		 * @return the Kernel ID of the given Kernel
 		 */
-		inline KernelID getKernelID(UInt number) {
+		KernelID getKernelID(UInt number) {
 			if (number < 0 || number >= m_kernelsNum) {
 				printf("Error in function getKernelID => The Kernel number is wrong");
 				exit(ERROR);
@@ -513,7 +513,7 @@ class TSU
 		 * @param[in] tid the DThread's ID which we want to update the Ready Counts
 		 * @param[in] context the context of the DThread
 		 */
-		inline void addInRemoteInputQueue(TID tid, context_t context) {
+		void addInRemoteInputQueue(TID tid, context_t context) {
 
 			// If the RIQ is full, put it in Unlimited RIQ
 			if (!m_remoteInputQueue.enqueue(tid, context)) {
@@ -530,7 +530,7 @@ class TSU
 		 * @param[in] tid the DThread's ID which we want to update the Ready Counts
 		 * @param[in] context the context of the DThread
 		 */
-		inline void addInRemoteInputQueue(TID tid, context_t context, void* data) {
+		void addInRemoteInputQueue(TID tid, context_t context, void* data) {
 
 			// If the RIQ is full, put it in Unlimited RIQ
 			if (!m_remoteInputQueue.enqueue(tid, GET_N1(context), data)) {
@@ -549,7 +549,7 @@ class TSU
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext  the end of the context range
 		 */
-		inline void addInRemoteInputQueue(TID tid, context_t context, context_t maxContext) {
+		void addInRemoteInputQueue(TID tid, context_t context, context_t maxContext) {
 
 			// If the RIQ is full, put it in Unlimited RIQ
 			if (!m_remoteInputQueue.enqueue(tid, context, maxContext)) {
@@ -565,7 +565,7 @@ class TSU
 		/**
 		 * Returns true if the TSU is idle, otherwise false
 		 */
-		inline bool isIdle(void) {
+		bool isIdle(void) {
 			return m_idle;
 		}
 
@@ -588,7 +588,7 @@ class TSU
 		 * @param[in] offset the offset of the memory segment
 		 * @param[in] size the size of the data segment
 		 */
-		inline void insertInDFToFKernelWithOffset(KernelID kernelID, AddrID addrID, AddrOffset offset, size_t size) {
+		void insertInDFToFKernelWithOffset(KernelID kernelID, AddrID addrID, AddrOffset offset, size_t size) {
 			m_kernels[kernelID]->insertInDFTWithOffset(addrID, offset, size);
 		}
 
@@ -600,21 +600,21 @@ class TSU
 		 * @param[in] index the index of the regular address in its data structure
 		 * @param[in] size the size of the data segment
 		 */
-		inline void insertInDFToFKernelWithRegAddress(KernelID kernelID, AddrID addrID, MemAddr addr, size_t index, size_t size) {
+		void insertInDFToFKernelWithRegAddress(KernelID kernelID, AddrID addrID, MemAddr addr, size_t index, size_t size) {
 			m_kernels[kernelID]->insertInDFTWithRegAddress(addrID, addr, index, size);
 		}
 
 		/**
 		 * @return the Data Forward Table of the Kernel with ID=kernelID
 		 */
-		inline DataForwardTable* getDFTofKernel(KernelID kernelID) {
+		DataForwardTable* getDFTofKernel(KernelID kernelID) {
 			return m_kernels[kernelID]->getDFT();
 		}
 
 		/**
 		 * Clears the Data Forward Table of the Kernel with ID=kernelID
 		 */
-		inline void clearDFTofKernel(KernelID kernelID) {
+		void clearDFTofKernel(KernelID kernelID) {
 			m_kernels[kernelID]->clearDFT();
 		}
 
@@ -623,7 +623,7 @@ class TSU
 		/**
 		 * Prints information about the DThreads (TID, RC and Consumers)
 		 */
-		inline void printDThreadsInfo() {
+		void printDThreadsInfo() {
 			TID tid = 0;
 
 			for (auto& x : m_TemplateMemory) {
@@ -649,7 +649,7 @@ class TSU
 		/**
 		 * Finalize the DDM Dependency Graph, i.e store the DThreads that their RC is not set, using the Consumer Lists
 		 */
-		inline void finalizeDependencyGraph() {
+		void finalizeDependencyGraph() {
 			storePendingThreadTemplates();
 		}
 
@@ -686,12 +686,12 @@ class TSU
 		 * @param iqEntry
 		 * @return false if there is no IQ_Entry available
 		 */
-		inline bool rrScheduler(IQ_Entry* iqEntry);
+		bool rrScheduler(IQ_Entry* iqEntry);
 
 		/**
 		 * @return true if all the Input Queues and Unlimited Input Queues are empty
 		 */
-		inline bool allIQsAreEmpty();
+		bool allIQsAreEmpty();
 
 		/**
 		 *	Gets the update commands from the Input Queues in a Round-Robin fashion and execute them.
@@ -749,7 +749,7 @@ class TSU
 		 * @param nesting the DThread's nesting
 		 * @return true if is valid, otherwise false
 		 */
-		inline bool isMultUpdateValid(const context_t& context, const context_t& maxContext, Nesting nesting) const {
+		bool isMultUpdateValid(const context_t& context, const context_t& maxContext, Nesting nesting) const {
 			switch (nesting) {
 				case Nesting::ONE:
 					case Nesting::CONTINUATION:
