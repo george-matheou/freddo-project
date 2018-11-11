@@ -44,7 +44,7 @@ namespace ddm {
 			/**
 			 * Decrements the Ready Count (RC) of the DThread's consumers which has Nesting-0
 			 */
-			inline void updateAllCons() const {
+			void updateAllCons() const {
 				KernelID kernelID = getKernelIDofKernel();
 				m_tsu->updateAllConsSimple(kernelID, m_tid);
 			}
@@ -53,7 +53,7 @@ namespace ddm {
 			 * Decrements the Ready Count (RC) of the DThread's consumers with Nesting>=1
 			 * @param[in] context the context of the consumers
 			 */
-			inline void updateAllCons(context_t context) const {
+			void updateAllCons(context_t context) const {
 				KernelID kernelID = getKernelIDofKernel();
 				m_tsu->updateAllCons(kernelID, m_tid, context);
 			}
@@ -63,7 +63,7 @@ namespace ddm {
 			 * @param[in] context the start of the context range
 			 * @param[in] maxContext  the end of the context range
 			 */
-			inline void updateAllCons(context_t context, context_t maxContext) const {
+			void updateAllCons(context_t context, context_t maxContext) const {
 				KernelID kernelID = getKernelIDofKernel();
 				m_tsu->updateAllCons(kernelID, m_tid, context, maxContext);
 			}
@@ -71,7 +71,7 @@ namespace ddm {
 			/**
 			 * @return the pointer of the shared Data (the SDP pointer)
 			 */
-			inline void* getSharedDataPointer() const {
+			void* getSharedDataPointer() const {
 				return m_data;
 			}
 
@@ -79,21 +79,21 @@ namespace ddm {
 			 * Set the pointer of the shared Data (the SDP pointer)
 			 * @param data the SDP pointer
 			 */
-			inline void setSharedDataPointer(void* data) {
+			void setSharedDataPointer(void* data) {
 				m_data = data;
 			}
 
 			/**
 			 * @return the TID of the DThread
 			 */
-			inline TID getTID() const {
+			TID getTID() const {
 				return m_tid;
 			}
 
 			/**
 			 * Prints the Consumers of the DThread
 			 */
-			inline void printConsumers() {
+			void printConsumers() {
 				cout << "Consumers of DThread " << m_tid << ": ";
 				ConsumerList* cons = m_tsu->getConsumers(m_tid);
 
@@ -164,7 +164,7 @@ namespace ddm {
 			/**
 			 * Decrements the Ready Count (RC) of this DThread
 			 */
-			inline void update() const {
+			void update() const {
 				KernelID kernelID = getKernelIDofKernel();
 				m_tsu->simpleUpdate(kernelID, m_tid);
 			}
@@ -210,7 +210,7 @@ namespace ddm {
 			 * Decrements the Ready Count (RC) of the DThread
 			 * @param[in] context the context of the DThread
 			 */
-			inline void update(cntx_1D_t context) const {
+			void update(cntx_1D_t context) const {
 				KernelID kernelID = getKernelIDofKernel();
 				context_t eCntx = CREATE_N1(context);
 
@@ -238,7 +238,7 @@ namespace ddm {
 			 * @param[in] context the start of the context range
 			 * @param[in] maxContext the end of the context range
 			 */
-			inline void update(cntx_1D_t context, cntx_1D_t maxContext) const {
+			void update(cntx_1D_t context, cntx_1D_t maxContext) const {
 				KernelID kernelID = getKernelIDofKernel();
 				context_t eCntx = CREATE_N1(context), eCntxMax = CREATE_N1(maxContext);
 
@@ -297,7 +297,7 @@ namespace ddm {
 			 * @param[in] context the context of the DThread
 			 * @param[in] splitterType the splitter type
 			 */
-			inline void update(cntx_2D_encoded_t context) const {
+			void update(cntx_2D_encoded_t context) const {
 				KernelID kernelID = getKernelIDofKernel();
 
 				if (m_isSingleNode) {
@@ -326,7 +326,7 @@ namespace ddm {
 			 * @param[in] maxContext the end of the context range
 			 * @param[in] splitterType the splitter type
 			 */
-			inline void update(cntx_2D_encoded_t context, cntx_2D_encoded_t maxContext) const {
+			void update(cntx_2D_encoded_t context, cntx_2D_encoded_t maxContext) const {
 				KernelID kernelID = getKernelIDofKernel();
 
 				if (m_isSingleNode) {
@@ -407,7 +407,7 @@ namespace ddm {
 			 * @param[in] context the context of the DThread
 			 * @param[in] splitterType the splitter type
 			 */
-			inline void update(cntx_3D_encoded_t context) const {
+			void update(cntx_3D_encoded_t context) const {
 				KernelID kernelID = getKernelIDofKernel();
 
 				if (m_isSingleNode) {
@@ -435,7 +435,7 @@ namespace ddm {
 			 * @param[in] maxContext the end of the context range
 			 * @param[in] splitterType the splitter type
 			 */
-			inline void update(cntx_3D_encoded_t context, cntx_3D_encoded_t maxContext) const {
+			void update(cntx_3D_encoded_t context, cntx_3D_encoded_t maxContext) const {
 				KernelID kernelID = getKernelIDofKernel();
 
 				if (m_isSingleNode) {

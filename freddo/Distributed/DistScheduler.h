@@ -81,7 +81,7 @@ class DistScheduler
 		/**
 		 * Prints useful information about the scheduler
 		 */
-		inline void printInfo() {
+		void printInfo() {
 			unsigned int i;
 
 			cout << "\nCores per peer: \n";
@@ -105,7 +105,7 @@ class DistScheduler
 		 * Returns the id of the peer which is responsible to execute the DThread with the given Context for Nesting-1
 		 * @param context the DThread's Context attribute
 		 */
-		inline UInt getPeerIDfromContextN1(const cntx_1D_t context) const {
+		UInt getPeerIDfromContextN1(const cntx_1D_t context) const {
 			return m_coreToPeer[context % m_totalNumCores];
 		}
 
@@ -114,7 +114,7 @@ class DistScheduler
 		 * @param context the DThread's Context attribute
 		 * @param splitterType the type of the Context Splitter (Outer or Inner)
 		 */
-		inline UInt getPeerIDfromContextN2(const cntx_2D_encoded_t context, SplitterType2D splitterType) const {
+		UInt getPeerIDfromContextN2(const cntx_2D_encoded_t context, SplitterType2D splitterType) const {
 			if (splitterType == SplitterType2D::OUTER_2D) {
 				return m_coreToPeer[GET_N2_OUTER(context) % m_totalNumCores];
 			}
@@ -128,7 +128,7 @@ class DistScheduler
 		 * @param context the DThread's Context attribute
 		 * @param splitterType the type of the Context Splitter (Outer or Middle or Inner)
 		 */
-		inline UInt getPeerIDfromContextN3(const cntx_3D_encoded_t context, SplitterType3D splitterType) const {
+		UInt getPeerIDfromContextN3(const cntx_3D_encoded_t context, SplitterType3D splitterType) const {
 			if (splitterType == SplitterType3D::OUTER_3D) {
 				return m_coreToPeer[GET_N3_OUTER(context) % m_totalNumCores];
 			}
@@ -148,7 +148,7 @@ class DistScheduler
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void splitContextsToPeersN1Fast(KernelID kernelID, TID tid, cntx_1D_t context, cntx_1D_t maxContext) {
+		void splitContextsToPeersN1Fast(KernelID kernelID, TID tid, cntx_1D_t context, cntx_1D_t maxContext) {
 			// Local Variables
 			cntx_1D_t start = context, end = maxContext, from = 0, to = 0;
 			UInt cntxPerNode;
@@ -189,7 +189,7 @@ class DistScheduler
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void splitContextsToPeersN2FastInner(KernelID kernelID, TID tid, const Context2D& context, const Context2D& maxContext) {
+		void splitContextsToPeersN2FastInner(KernelID kernelID, TID tid, const Context2D& context, const Context2D& maxContext) {
 			// Local Variables
 			cntx_2D_In_t start, end, from = 0, to = 0;
 			UInt cntxPerNode;
@@ -237,7 +237,7 @@ class DistScheduler
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void splitContextsToPeersN2FastOuter(KernelID kernelID, TID tid, const Context2D& context, const Context2D& maxContext) {
+		void splitContextsToPeersN2FastOuter(KernelID kernelID, TID tid, const Context2D& context, const Context2D& maxContext) {
 			// Local Variables
 			cntx_2D_Out_t start, end, from = 0, to = 0;
 			UInt cntxPerNode;
@@ -285,7 +285,7 @@ class DistScheduler
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void splitContextsToPeersN3FastInner(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
+		void splitContextsToPeersN3FastInner(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
 			// Local Variables
 			cntx_3D_In_t start, end, from = 0, to = 0;
 			UInt cntxPerNode;
@@ -333,7 +333,7 @@ class DistScheduler
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void splitContextsToPeersN3FastMiddle(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
+		void splitContextsToPeersN3FastMiddle(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
 			// Local Variables
 			cntx_3D_Mid_t start, end, from = 0, to = 0;
 			UInt cntxPerNode;
@@ -381,7 +381,7 @@ class DistScheduler
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void splitContextsToPeersN3FastOuter(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
+		void splitContextsToPeersN3FastOuter(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
 			// Local Variables
 			cntx_3D_Out_t start, end, from = 0, to = 0;
 			UInt cntxPerNode;
@@ -428,7 +428,7 @@ class DistScheduler
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void splitContextsToPeersN1(KernelID kernelID, TID tid, const cntx_1D_t context, const cntx_1D_t maxContext) {
+		void splitContextsToPeersN1(KernelID kernelID, TID tid, const cntx_1D_t context, const cntx_1D_t maxContext) {
 			// Local Variables
 			cntx_1D_t start, end, startCntx, endCntx, curCntx;
 			UInt first, last, startingPoint;
@@ -483,7 +483,7 @@ class DistScheduler
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void splitContextsToPeersN2Inner(KernelID kernelID, TID tid, const Context2D& context, const Context2D& maxContext) {
+		void splitContextsToPeersN2Inner(KernelID kernelID, TID tid, const Context2D& context, const Context2D& maxContext) {
 			// Local Variables
 			cntx_2D_In_t startCntx, endCntx, curCntx, tmpStart;
 			UInt first, last, startingPoint;
@@ -539,7 +539,7 @@ class DistScheduler
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void splitContextsToPeersN2Outer(KernelID kernelID, TID tid, const Context2D& context, const Context2D& maxContext) {
+		void splitContextsToPeersN2Outer(KernelID kernelID, TID tid, const Context2D& context, const Context2D& maxContext) {
 			// Local Variables
 			cntx_2D_Out_t startCntx, endCntx, curCntx, tmpStart;
 			UInt first, last, startingPoint;
@@ -596,7 +596,7 @@ class DistScheduler
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void splitContextsToPeersN3Inner(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
+		void splitContextsToPeersN3Inner(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
 			// Local Variables
 			cntx_3D_In_t startCntx, endCntx, curCntx, tmpStart;
 			UInt first, last, startingPoint;
@@ -653,7 +653,7 @@ class DistScheduler
 		 * @param[in] context the start of the context range
 		 * @param[in] maxContext the end of the context range
 		 */
-		inline void splitContextsToPeersN3Middle(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
+		void splitContextsToPeersN3Middle(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
 			// Local Variables
 			cntx_3D_Mid_t startCntx, endCntx, curCntx, tmpStart;
 			UInt first, last, startingPoint;
@@ -712,7 +712,7 @@ class DistScheduler
 		 * @param[in] maxContext the end of the context range
 		 * @param[in] dft the DataForwardTable of the Kernel
 		 */
-		inline void splitContextsToPeersN3Outer(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
+		void splitContextsToPeersN3Outer(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
 			// Local Variables
 			cntx_3D_Out_t startCntx, endCntx, curCntx, tmpStart;
 			UInt first, last, startingPoint;
@@ -782,7 +782,7 @@ class DistScheduler
 		 * @param context the start of the context range
 		 * @param maxContext the end of the context range
 		 */
-		inline void sendMultipleAsSingleUpdatesN1(KernelID kernelID, TID tid, const cntx_1D_t context, const cntx_1D_t maxContext) {
+		void sendMultipleAsSingleUpdatesN1(KernelID kernelID, TID tid, const cntx_1D_t context, const cntx_1D_t maxContext) {
 			cntx_1D_t from = context;
 
 			for (PeerID id = 0; id < m_numOfPeers; ++id) {
@@ -810,7 +810,7 @@ class DistScheduler
 		 * @param context the start of the context range
 		 * @param maxContext the end of the context range
 		 */
-		inline void sendMultipleAsSingleUpdatesN2(KernelID kernelID, TID tid, const Context2D& context, const Context2D& maxContext) {
+		void sendMultipleAsSingleUpdatesN2(KernelID kernelID, TID tid, const Context2D& context, const Context2D& maxContext) {
 			PeerID id = 0;
 
 			for (cntx_2D_Out_t cntxOut = context.Outer; cntxOut < (maxContext.Outer + 1); ++cntxOut)
@@ -840,7 +840,7 @@ class DistScheduler
 		 * @param context the start of the context range
 		 * @param maxContext the end of the context range
 		 */
-		inline void sendMultipleAsSingleUpdatesN3(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
+		void sendMultipleAsSingleUpdatesN3(KernelID kernelID, TID tid, const Context3D& context, const Context3D& maxContext) {
 			PeerID id = 0;
 
 			for (cntx_3D_Out_t cntxOut = context.Outer; cntxOut < (maxContext.Outer + 1); ++cntxOut)
@@ -867,7 +867,7 @@ class DistScheduler
 		 * @param kernelID the ID of the Kernel
 		 * @param id the Peer's ID
 		 */
-		inline void sendModifiedData(KernelID kernelID, PeerID id) {
+		void sendModifiedData(KernelID kernelID, PeerID id) {
 			DataForwardTable* dft = m_tsuRef->getDFTofKernel(kernelID);
 
 			for (UInt i = 0; i < dft->getAlteredSegmentsNum(); ++i) {
@@ -890,7 +890,7 @@ class DistScheduler
 		 * @param multUpdBlocks a vector that holds the multiple updates of each peer (in vector)
 		 * @param kernelID the ID of the Kernel
 		 */
-		inline void sendDataAndMultUpdatesToPeers(TID tid, MUBofPeers& multUpdBlocks, KernelID kernelID) {
+		void sendDataAndMultUpdatesToPeers(TID tid, MUBofPeers& multUpdBlocks, KernelID kernelID) {
 			for (PeerID peerID = 0; peerID < m_numOfPeers; ++peerID) {
 				if (peerID != m_localPeerID && multUpdBlocks[peerID].size() > 0) {
 					sendModifiedData(kernelID, peerID);  // Send modified data before update

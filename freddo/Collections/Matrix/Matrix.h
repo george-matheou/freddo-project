@@ -103,15 +103,15 @@ class Matrix {
 		}
 
 		// Getters
-		inline T* top() {
+		T* top() {
 			return top_;
 		}
 
-		inline size_t m() const {
+		size_t m() const {
 			return m_;
 		}
 
-		inline size_t n() const {
+		size_t n() const {
 			return n_;
 		}
 
@@ -178,7 +178,7 @@ class Matrix {
 		 * @param j horizontal index of the element
 		 * @param val element value
 		 */
-		inline void setVal(const size_t i, const size_t j, const T val) {
+		void setVal(const size_t i, const size_t j, const T val) {
 			assert(i >= 0);
 			assert(i < m_);
 			assert(j >= 0);

@@ -95,7 +95,7 @@ class SimpleHashTable
 		 * @param[in] value
 		 * @return a pointer to the new entry/pair or NULL if the insertion fails
 		 */
-		inline VALUE* add(KEY key, VALUE value) {
+		VALUE* add(KEY key, VALUE value) {
 			// Find an empty entry in the memory
 			int emptyIndex = findEmptyEntry(key);
 
@@ -116,7 +116,7 @@ class SimpleHashTable
 		 * @param[in] key
 		 * @return true if the pair removed successfully, otherwise false
 		 */
-		inline bool remove(KEY key) {
+		bool remove(KEY key) {
 			unsigned int i;
 
 			// Use a hash function to find a starting point
@@ -147,7 +147,7 @@ class SimpleHashTable
 		 * @param[in] key
 		 * @return a pointer to the value if the search was successful, otherwise NULL
 		 */
-		inline VALUE* getValue(KEY key) const {
+		VALUE* getValue(KEY key) const {
 			unsigned int i;
 
 			// Use a hash function to find a starting point
@@ -169,7 +169,7 @@ class SimpleHashTable
 		/**
 		 * @return true if the HashTable contains the key, otherwise false
 		 */
-		inline bool contains(KEY key) const {
+		bool contains(KEY key) const {
 			unsigned int i;
 
 			// Use a hash function to find a starting point
@@ -191,7 +191,7 @@ class SimpleHashTable
 		/**
 		 * Prints the contents of the HashTable
 		 */
-		inline void print() const {
+		void print() const {
 
 			for (unsigned int i = 0; i < m_size; i++) {
 				cout << "Key: ";
@@ -213,7 +213,7 @@ class SimpleHashTable
 		/**
 		 * @return true if x is a power of two
 		 */
-		inline bool isPowerOfTwo(unsigned int x) {
+		bool isPowerOfTwo(unsigned int x) {
 			return ((x != 0) && ((x & (~x + 1)) == x));
 		}
 
@@ -221,7 +221,7 @@ class SimpleHashTable
 		 * @param[in] key the key
 		 * @return the index of an empty entry of the HashTable. If there is no empty entry the -1 is returned.
 		 */
-		inline int findEmptyEntry(KEY key) const {
+		int findEmptyEntry(KEY key) const {
 			unsigned int i;
 
 			// Use a hash function to find a starting point

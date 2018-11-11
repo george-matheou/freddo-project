@@ -171,70 +171,70 @@ class PTileMatrix {
 		 * Set the GAS ID of this object
 		 * @param gasID
 		 */
-		inline void setGasID(unsigned int gasID) {
+		void setGasID(unsigned int gasID) {
 			GasID_ = gasID;
 		}
 
 		/**
 		 * @return the GAS ID of this object
 		 */
-		inline unsigned int getGasID() {
+		unsigned int getGasID() {
 			return GasID_;
 		}
 
 		/**
 		 * @return the size of a tile in bytes
 		 */
-		inline size_t getSizeOfTile() {
+		size_t getSizeOfTile() {
 			return sizeOfTile_;
 		}
 
 		/**
 		 * @return the number of rows of the matrix
 		 */
-		inline size_t M() const {
+		size_t M() const {
 			return M_;
 		}
 
 		/**
 		 * @return number of columns of the matrix
 		 */
-		inline size_t N() const {
+		size_t N() const {
 			return N_;
 		}
 
 		/**
 		 * @return the number of rows of the tile
 		 */
-		inline size_t mb() const {
+		size_t mb() const {
 			return mb_;
 		}
 
 		/**
 		 * @return the number of columns of the tile
 		 */
-		inline size_t nb() const {
+		size_t nb() const {
 			return nb_;
 		}
 
 		/**
 		 * @return the number of row tiles
 		 */
-		inline size_t mt() const {
+		size_t mt() const {
 			return mt_;
 		}
 
 		/**
 		 * @return the number of column tiles
 		 */
-		inline size_t nt() const {
+		size_t nt() const {
 			return nt_;
 		}
 
 		/**
 		 * @return the array where each element is a BMatrix object (i.e. a tile)
 		 */
-		inline T** top() {
+		T** top() {
 			return top_;
 		}
 
@@ -339,7 +339,7 @@ class PTileMatrix {
 		 * @param j horizontal index of the element
 		 * @param val element value
 		 */
-		inline void setTileVal(const size_t row, const size_t col, const size_t i, const size_t j, const T val) {
+		void setTileVal(const size_t row, const size_t col, const size_t i, const size_t j, const T val) {
 			top_[row + col * nt_][i + j * nb_] = val;
 		}
 
@@ -350,7 +350,7 @@ class PTileMatrix {
 		 * @param i vertical index of the element
 		 * @param j horizontal index of the element
 		 */
-		inline T getTileVal(const size_t row, const size_t col, const size_t i, const size_t j) {
+		T getTileVal(const size_t row, const size_t col, const size_t i, const size_t j) {
 			return top_[row + col * nt_][i + j * nb_];
 		}
 
@@ -359,7 +359,7 @@ class PTileMatrix {
 		 * @param i row index
 		 * @param j column index
 		 */
-		inline T* fetchTile(const size_t i, const size_t j) const {
+		T* fetchTile(const size_t i, const size_t j) const {
 			assert(i >= 0 && j >= 0);
 			assert(i < mt_ && j < nt_);
 

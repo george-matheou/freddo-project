@@ -24,7 +24,7 @@
  *  Created on: Dec 23, 2016
  *      Author: geomat
  * Description: This class holds the data of a recursive function call that can be executed
- * in a distributed envrinoment
+ * in a distributed environment
  */
 
 #ifndef DISTRDATA_H_
@@ -69,21 +69,21 @@ class DistRData {
 		/**
 		 * @return the argument(s) of the recursive instance
 		 */
-		inline void* getArgs() const {
+		void* getArgs() const {
 			return m_argument;
 		}
 
 		/**
 		 * @return my parent's instance/context
 		 */
-		inline RInstance getParentInstance() const {
+		RInstance getParentInstance() const {
 			return m_parentInstance;
 		}
 
 		/**
 		 * @return my parent's DistRData
 		 */
-		inline DistRData* getParentRData() const {
+		DistRData* getParentRData() const {
 			return m_parentData;
 		}
 
@@ -91,7 +91,7 @@ class DistRData {
 		 * Adds the value to the parent's RV vector
 		 * @param value a pointer to the child's RV
 		 */
-		inline void addReturnValue(void* value) {
+		void addReturnValue(void* value) {
 			m_childrenRVs[m_counterRVs.fetch_add(1)] = value;
 		}
 
@@ -100,7 +100,7 @@ class DistRData {
 		 * @return the result of the sum reduction
 		 */
 		template <typename T_RETURN>
-		inline T_RETURN sum_reduction() const {
+		T_RETURN sum_reduction() const {
 			T_RETURN result = 0;
 
 			for (unsigned int i = 0; i < m_counterRVs; i++) {
@@ -114,7 +114,7 @@ class DistRData {
 		 * @return references to the children RVs
 		 */
 		template <typename T_RETURN>
-		inline T_RETURN** getChildrenRVs() const {
+		T_RETURN** getChildrenRVs() const {
 			return (T_RETURN**) m_childrenRVs;
 		}
 
@@ -125,7 +125,7 @@ class DistRData {
 		/**
 		 * @return if this RData has parent
 		 */
-		inline bool hasParent() const {
+		bool hasParent() const {
 			return m_parentData != nullptr;
 		}
 

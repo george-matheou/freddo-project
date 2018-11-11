@@ -41,8 +41,6 @@
 #include <string>
 #include <sstream>
 
-using namespace std;
-
 class Auxiliary {
 
 	public:
@@ -52,7 +50,7 @@ class Auxiliary {
 		 * @param[in] thread the thread's identity
 		 * @param[in] affinity the cores's identity
 		 */
-		static inline void setThreadAffinity(pthread_t thread, unsigned int affinity) {
+		static void setThreadAffinity(pthread_t thread, unsigned int affinity) {
 			cpu_set_t cpuset;
 			CPU_ZERO(&cpuset);
 			CPU_SET(affinity, &cpuset);
@@ -66,21 +64,21 @@ class Auxiliary {
 		/**
 		 * @return the number of cores of the system
 		 */
-		static inline unsigned int getSystemNumCores(void) {
+		static unsigned int getSystemNumCores(void) {
 			return sysconf(_SC_NPROCESSORS_ONLN);
 		}
 
 		/**
 		 * @return true if x is a power of two
 		 */
-		static inline bool isPowerOfTwo(unsigned int x) {
+		static bool isPowerOfTwo(unsigned int x) {
 			return ((x != 0) && ((x & (~x + 1)) == x));
 		}
 
 		/**
 		 * @return the smallest power of two that's greater or equal to x
 		 */
-		static inline int pow2roundup(int x) {
+		static int pow2roundup(int x) {
 			if (x < 0)
 				return 0;
 
@@ -96,7 +94,7 @@ class Auxiliary {
 		/**
 		 * @return the string representation of an EntireContext
 		 */
-		static inline string entireContextToString(context_t c, Nesting nesting) {
+		static std::string entireContextToString(context_t c, Nesting nesting) {
 
 			std::ostringstream convert;
 

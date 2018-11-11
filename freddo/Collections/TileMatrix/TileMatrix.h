@@ -165,7 +165,7 @@ class TileMatrix {
 		 * Set the GAS ID of this object
 		 * @param gasID
 		 */
-		inline void setGasID(unsigned int gasID) {
+		void setGasID(unsigned int gasID) {
 			GasID_ = gasID;
 		}
 
@@ -184,7 +184,7 @@ class TileMatrix {
 		/**
 		 * @return the size of a tile in bytes
 		 */
-		inline size_t getSizeOfTile() {
+		size_t getSizeOfTile() {
 			return sizeOfTile_;
 		}
 
@@ -193,56 +193,56 @@ class TileMatrix {
 		/**
 		 * @return the GAS ID of this object
 		 */
-		inline unsigned int getGasID() {
+		unsigned int getGasID() {
 			return GasID_;
 		}
 
 		/**
 		 * @return the number of rows of the matrix
 		 */
-		inline size_t M() const {
+		size_t M() const {
 			return M_;
 		}
 
 		/**
 		 * @return number of columns of the matrix
 		 */
-		inline size_t N() const {
+		size_t N() const {
 			return N_;
 		}
 
 		/**
 		 * @return the number of rows of the tile
 		 */
-		inline size_t mb() const {
+		size_t mb() const {
 			return mb_;
 		}
 
 		/**
 		 * @return the number of columns of the tile
 		 */
-		inline size_t nb() const {
+		size_t nb() const {
 			return nb_;
 		}
 
 		/**
 		 * @return the number of row tiles
 		 */
-		inline size_t mt() const {
+		size_t mt() const {
 			return mt_;
 		}
 
 		/**
 		 * @return the number of columns of the tile
 		 */
-		inline size_t nt() const {
+		size_t nt() const {
 			return nt_;
 		}
 
 		/**
 		 * @return the array where each element is a BMatrix object (i.e. a tile)
 		 */
-		inline BMatrix<T>** top() {
+		BMatrix<T>** top() {
 			return top_;
 		}
 

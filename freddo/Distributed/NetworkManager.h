@@ -105,14 +105,14 @@ class NetworkManager final
 		/**
 		 * @return the number of peers of the distributed system
 		 */
-		inline unsigned int getNumOfPeers() const {
+		unsigned int getNumOfPeers() const {
 			return m_numOfPeers;
 		}
 
 		/**
 		 * @return the ID of the peer
 		 */
-		inline PeerID getPeerID() const {
+		PeerID getPeerID() const {
 			return m_localPeerID;
 		}
 
@@ -149,7 +149,7 @@ class NetworkManager final
 		/**
 		 * @return the number of computation cores of the peer
 		 */
-		inline unsigned int getLocalNumOfCores() const {
+		unsigned int getLocalNumOfCores() const {
 			return m_numOfCores;
 		}
 
@@ -157,7 +157,7 @@ class NetworkManager final
 		 * @return the total number of cores in the distributed system
 		 * @note use this function after calling the start() function
 		 */
-		inline unsigned int getTotalNumOfCores() const {
+		unsigned int getTotalNumOfCores() const {
 			return m_totalNumCores;
 		}
 
@@ -165,7 +165,7 @@ class NetworkManager final
 		 * @return the list that contains the number of cores of each peer
 		 * @note use this function after calling the start() function
 		 */
-		inline const unsigned int* getCoresPerPeerList() const {
+		const unsigned int* getCoresPerPeerList() const {
 			return m_coresPerPeer;
 		}
 
@@ -175,7 +175,7 @@ class NetworkManager final
 		 * @param tid the tid of the DThread
 		 * @param context the context of the DThread
 		 */
-		inline void sendSingleUpdate(PeerID id, TID tid, context_t context) {
+		void sendSingleUpdate(PeerID id, TID tid, context_t context) {
 			increaseSendCounter();  // Increase the send counter
 			setPeerColor(TerminationColor::BLACK);  // Set peer's color to black
 
@@ -194,7 +194,7 @@ class NetworkManager final
 		 * @param context the lower bound of the context
 		 * @param maxContext the upper bound of the context
 		 */
-		inline void sendMultipleUpdate(PeerID id, TID tid, context_t context, context_t maxContext) {
+		void sendMultipleUpdate(PeerID id, TID tid, context_t context, context_t maxContext) {
 			increaseSendCounter();  // Increase the send counter
 			setPeerColor(TerminationColor::BLACK);  // Set peer's color to black
 
@@ -215,7 +215,7 @@ class NetworkManager final
 		 * @param maxContext the upper bound of the context
 		 * @param msgType the message type for a compressed multiple update
 		 */
-		inline void sendCompressedMultipleUpdate(PeerID id, TID tid, context_t context, context_t maxContext, NetMsgType msgType) {
+		void sendCompressedMultipleUpdate(PeerID id, TID tid, context_t context, context_t maxContext, NetMsgType msgType) {
 			increaseSendCounter();  // Increase the send counter
 			setPeerColor(TerminationColor::BLACK);  // Set peer's color to black
 
@@ -235,7 +235,7 @@ class NetworkManager final
 		 * @param offset the offset in memory
 		 * @param size the size of the data block
 		 */
-		inline void sendDataToPeer(PeerID id, AddrID addrID, AddrOffset offset, size_t size) {
+		void sendDataToPeer(PeerID id, AddrID addrID, AddrOffset offset, size_t size) {
 			if (id == m_localPeerID)
 				return;
 
@@ -277,7 +277,7 @@ class NetworkManager final
 		 * @param addr the address of the data block
 		 * @param size the size of the data block
 		 */
-		inline void sendDataToPeer(PeerID id, AddrID addrID, size_t index, MemAddr addr, size_t size) {
+		void sendDataToPeer(PeerID id, AddrID addrID, size_t index, MemAddr addr, size_t size) {
 			if (id == m_localPeerID)
 				return;
 
@@ -315,7 +315,7 @@ class NetworkManager final
 		 * @param size the number of multiple updates
 		 * @param block the pointer to the mutliple updates
 		 */
-		inline void sendMutlUpdBlockToPeer(PeerID id, TID tid, size_t size, const MultUpdateEntry* block) {
+		void sendMutlUpdBlockToPeer(PeerID id, TID tid, size_t size, const MultUpdateEntry* block) {
 			if (id == m_localPeerID)
 				return;
 
@@ -360,7 +360,7 @@ class NetworkManager final
 		 * @param argsSize the size in bytes of the arguments
 		 * @param args a pointer to the arguments of this call
 		 */
-		inline void sendRDataToPeer(PeerID id, TID tid, RInstance context, RInstance parentInstance, const void* parentDistRData, unsigned int numChilds,
+		void sendRDataToPeer(PeerID id, TID tid, RInstance context, RInstance parentInstance, const void* parentDistRData, unsigned int numChilds,
 		    size_t argsSize, const void* args) {
 			if (id == m_localPeerID)
 				return;
@@ -415,7 +415,7 @@ class NetworkManager final
 		 * @param continuationContext
 		 * @param parentDistRData
 		 */
-		inline void sendReturnValueToParent(PeerID id, const void* value, size_t valueSize, TID continuationTID, RInstance continuationContext,
+		void sendReturnValueToParent(PeerID id, const void* value, size_t valueSize, TID continuationTID, RInstance continuationContext,
 		    const void* parentDistRData) {
 			if (id == m_localPeerID)
 				return;
@@ -515,12 +515,12 @@ class NetworkManager final
 		 * Blocks until a single peer connects to this peer
 		 * @note This is used by the server-part of a peer
 		 */
-		inline void acceptPeer();
+		void acceptPeer();
 
 		/**
 		 * Handshaking between the peers of the distributed system
 		 */
-		inline void handshake();
+		void handshake();
 
 		/**
 		 * The thread that received the incoming messages from the other peers
@@ -532,24 +532,24 @@ class NetworkManager final
 		 * Processes the received termination token
 		 * @param token the received termination token
 		 */
-		inline void processReceivedTerminationToken(TerminationToken& token);
+		void processReceivedTerminationToken(TerminationToken& token);
 
 		/**
 		 * @return the message counter of this peer
 		 */
-		inline long getMessageCounter();
+		long getMessageCounter();
 
 		/**
 		 * Send Termination Token to a peer
 		 * @param id the peer's id
 		 * @param token the token
 		 */
-		inline void sendTerminationToken(PeerID id, TerminationToken &token);
+		void sendTerminationToken(PeerID id, TerminationToken &token);
 
 		/**
 		 * Broadcast the shutdown message to the other's peers
 		 */
-		inline void broadcastShutdown();
+		void broadcastShutdown();
 
 		/**
 		 * Increases the Sending Counter by one
@@ -563,7 +563,7 @@ class NetworkManager final
 		 * @return the peer's color
 		 * @note atomic operation
 		 */
-		inline TerminationColor getPeerColor() {
+		TerminationColor getPeerColor() {
 			return m_peerColor.load();
 		}
 
@@ -571,7 +571,7 @@ class NetworkManager final
 		 * Set the peer's color
 		 * @note atomic operation
 		 */
-		inline void setPeerColor(TerminationColor color) {
+		void setPeerColor(TerminationColor color) {
 			m_peerColor.store(color);
 		}
 
@@ -580,7 +580,7 @@ class NetworkManager final
 		 * @param id the Peer's id
 		 * @param packet the packet that will be sent
 		 */
-		inline void sendGeneralPacketToPeer(PeerID id, const GeneralPacket& packet) {
+		void sendGeneralPacketToPeer(PeerID id, const GeneralPacket& packet) {
 #ifdef PROTECT_SEND_WITH_LOCK
 			pthread_mutex_lock(&m_peerList[id].outgoingMutex);
 			{
@@ -603,7 +603,7 @@ class NetworkManager final
 		 * @param id the Peer's id
 		 * @param packet the packet that will be sent
 		 */
-		inline void sendGeneralPacketToPeerUnsafe(PeerID id, const GeneralPacket& packet) {
+		void sendGeneralPacketToPeerUnsafe(PeerID id, const GeneralPacket& packet) {
 			MPI_Send(
 			    &packet,
 			    sizeof(GeneralPacket),
@@ -619,7 +619,7 @@ class NetworkManager final
 		 * @param data the data that will be sent
 		 * @param size the size of data
 		 */
-		inline void sendToPeer(PeerID id, const Byte* const data, size_t size) {
+		void sendToPeer(PeerID id, const Byte* const data, size_t size) {
 
 #ifdef PROTECT_SEND_WITH_LOCK
 			pthread_mutex_lock(&m_peerList[id].outgoingMutex);
@@ -644,7 +644,7 @@ class NetworkManager final
 		 * @param data the data that will be sent
 		 * @param size the size of data
 		 */
-		inline void sendToPeerUnsafe(PeerID id, const Byte* const data, size_t size) {
+		void sendToPeerUnsafe(PeerID id, const Byte* const data, size_t size) {
 			MPI_Send(
 			    (const Byte*) data,
 			    size,
@@ -660,7 +660,7 @@ class NetworkManager final
 		 * @param to the buffer where the data will be stored
 		 * @param size the size of the data
 		 */
-		inline void getDataFromPeer(PeerID id, Byte* to, size_t size) {
+		void getDataFromPeer(PeerID id, Byte* to, size_t size) {
 			MPI_Recv(
 			    (void*) to,
 			    size,
@@ -679,7 +679,7 @@ class NetworkManager final
 		 * @param rightDistrance the distance between a staring and ending point of a multiple update
 		 * @param bottomDistance the distance between two successive multiple updates (from their starting points)
 		 */
-		inline void uncompressedMultUpdateN1(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
+		void uncompressedMultUpdateN1(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
 			cntx_1D_t from = GET_N1(start);
 			cntx_1D_t to = from + rightDistrance - 1;
 			cntx_1D_t endPoint = GET_N1(end);
@@ -700,7 +700,7 @@ class NetworkManager final
 		 * @param rightDistrance the distance between a staring and ending point of a multiple update
 		 * @param bottomDistance the distance between two successive multiple updates (from their starting points)
 		 */
-		inline void uncompressedMultUpdateN2Inner(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
+		void uncompressedMultUpdateN2Inner(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
 			cntx_2D_In_t from = GET_N2_INNER(start);
 			cntx_2D_In_t to = from + rightDistrance - 1;
 			cntx_2D_In_t endPoint = GET_N2_INNER(end);
@@ -721,7 +721,7 @@ class NetworkManager final
 		 * @param rightDistrance the distance between a staring and ending point of a multiple update
 		 * @param bottomDistance the distance between two successive multiple updates (from their starting points)
 		 */
-		inline void uncompressedMultUpdateN2Outer(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
+		void uncompressedMultUpdateN2Outer(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
 			cntx_2D_Out_t from = GET_N2_OUTER(start);
 			cntx_2D_Out_t to = from + rightDistrance - 1;
 			cntx_2D_Out_t endPoint = GET_N2_OUTER(end);
@@ -742,7 +742,7 @@ class NetworkManager final
 		 * @param rightDistrance the distance between a staring and ending point of a multiple update
 		 * @param bottomDistance the distance between two successive multiple updates (from their starting points)
 		 */
-		inline void uncompressedMultUpdateN3Inner(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
+		void uncompressedMultUpdateN3Inner(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
 			cntx_3D_In_t from, endPoint;
 
 			from = GET_N3_INNER(start);
@@ -768,7 +768,7 @@ class NetworkManager final
 		 * @param rightDistrance the distance between a staring and ending point of a multiple update
 		 * @param bottomDistance the distance between two successive multiple updates (from their starting points)
 		 */
-		inline void uncompressedMultUpdateN3Middle(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
+		void uncompressedMultUpdateN3Middle(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
 			cntx_3D_Mid_t from, endPoint;
 
 			from = GET_N3_MIDDLE(start);
@@ -795,7 +795,7 @@ class NetworkManager final
 		 * @param rightDistrance the distance between a staring and ending point of a multiple update
 		 * @param bottomDistance the distance between two successive multiple updates (from their starting points)
 		 */
-		inline void uncompressedMultUpdateN3Outer(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
+		void uncompressedMultUpdateN3Outer(TID tid, context_t start, context_t end, UInt rightDistrance, UInt bottomDistance) {
 			cntx_3D_Out_t from, endPoint;
 
 			from = GET_N3_OUTER(start);
@@ -819,7 +819,7 @@ class NetworkManager final
 		 * @param size the number of multiple updates
 		 * @param block the block that holds the multiple updates
 		 */
-		inline void handleMultUpdBlock(TID tid, size_t size, const MultUpdateEntry* block);
+		void handleMultUpdBlock(TID tid, size_t size, const MultUpdateEntry* block);
 };
 
 #endif /* DISTRIBUTED_NETWORK_H_ */

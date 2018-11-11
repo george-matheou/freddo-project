@@ -85,7 +85,7 @@ class DataForwardTable
 		 * @param[in] offset the offset of the memory segment
 		 * @param[in] size the size of the memory segment
 		 */
-		inline void addWithOffset(AddrID addrID, AddrOffset offset, size_t size) {
+		void addWithOffset(AddrID addrID, AddrOffset offset, size_t size) {
 			if (m_count >= FWD_TABLE_SIZE - 1) {
 				printf("Error in function DataForwardTable::add => The Data Forward Table is full.\n");
 				exit(ERROR);
@@ -106,7 +106,7 @@ class DataForwardTable
 		 * @param[in] index the index of the regular address in its data structure
 		 * @param[in] size the size of the memory segment
 		 */
-		inline void addWithRegAddress(AddrID addrID, MemAddr addr, size_t index, size_t size) {
+		void addWithRegAddress(AddrID addrID, MemAddr addr, size_t index, size_t size) {
 			if (m_count >= FWD_TABLE_SIZE - 1) {
 				printf("Error in function DataForwardTable::add => The Data Forward Table is full.\n");
 				exit(ERROR);
@@ -126,7 +126,7 @@ class DataForwardTable
 		 * @param[in] fwdTableIndex the index of the memory segment in the Data Forward Table
 		 * @return true if the segment was sent to the peerID, otherwise false
 		 */
-		inline bool isSent(unsigned int peerID, UInt fwdTableIndex) {
+		bool isSent(unsigned int peerID, UInt fwdTableIndex) {
 			return m_table[fwdTableIndex].sentTo[peerID];
 		}
 
@@ -135,14 +135,14 @@ class DataForwardTable
 		 * @param[in] peerID the peer's id
 		 * @param[in] fwdTableIndex the index of the memory segment in the Data Forward Table
 		 */
-		inline void markAsSent(unsigned int peerID, UInt fwdTableIndex) {
+		void markAsSent(unsigned int peerID, UInt fwdTableIndex) {
 			m_table[fwdTableIndex].sentTo[peerID] = true;
 		}
 
 		/**
 		 * @return the number of the Altered Segments in the Data Forward Table
 		 */
-		inline UInt getAlteredSegmentsNum() {
+		UInt getAlteredSegmentsNum() {
 			return m_count;
 		}
 
