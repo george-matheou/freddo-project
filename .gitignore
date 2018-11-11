@@ -19,3 +19,8 @@ benchmarks/powerset/bin/*
 benchmarks/qr/bin/*
 benchmarks/swaptions/bin/*
 
+.cproject
+.metadata/*
+.project
+.settings/*
+
