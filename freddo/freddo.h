@@ -39,7 +39,6 @@
 #include "Distributed/DistScheduler.h"
 #include "freddo_config.h"
 #include "Distributed/NetworkManager.h"
-#include "Timer/Timer.h"
 #include <atomic>
 #include <unordered_map>
 #include "Collections/TileMatrix/TileMatrix.h"
@@ -271,13 +270,6 @@ namespace ddm {
 	 */
 	UInt getKernelNum() {
 		return m_tsu->getKernelNum();
-	}
-
-	/**
-	 * @return the current time in seconds
-	 */
-	time_count getCurTime() {
-		return gtod_micro();
 	}
 
 	/**

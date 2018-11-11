@@ -112,7 +112,7 @@ class TileMatrix {
 
 			assert(source.top_ != NULL);
 
-			sizeOfTile_ = source.getSizeOfTile();
+			sizeOfTile_ = source.sizeOfTile_;
 			M_ = source.M_;
 			N_ = source.N_;
 			mb_ = source.mb_;

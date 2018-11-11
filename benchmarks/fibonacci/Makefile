@@ -12,10 +12,7 @@ all:$(EXECS)
 %:%.cpp
 	$(CXX_MPI) $< $(CXXFLAGS) -o $(BIN_DIR)/$@
 
-Timer.o: Timer.h Timer.c
-	gcc -c Timer.c -o Timer.o
-
 clean:
-	rm -f $(Binaries) Timer.o
+	rm -f $(Binaries)
 	
 	

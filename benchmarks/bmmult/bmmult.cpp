@@ -22,10 +22,10 @@
 #include <string.h>
 #include <iostream>
 #include <pthread.h>
+#include <chrono>
 #include <freddo/dthreads.h>
 #include <freddo/future_dthreads.h>
 
-using namespace std;
 using namespace ddm;
 
 #define SINGLE_PRECISION
@@ -45,7 +45,7 @@ void matmul(DATA_TYPE* A, DATA_TYPE* B, DATA_TYPE* C);
 #define ALPHA (0.0001)
 
 static unsigned int blockSize = 32, matrixSize = 256, blocks;
-static double timeParallel, timeSerial;
+static std::chrono::milliseconds::rep timeParallel, timeSerial;
 DATA_TYPE **A, **B, **C, **S;
 static int Sim_Iter_Num = 2;
 int DVM_CORE_NUM = 8;
@@ -107,7 +107,6 @@ void multiplyBlock(Context2DArg context) {
 }
 
 int main(int argc, char* argv[]) {
-	double timeStart = 0, timeFinish = 0;
 
 	if (argc != 6) {
 		printf("arguments: <#Kernels> <MatrixSize> <BlockSize> <Run Serial> <Sim_Iter_Num>\nEg. program 10 1024 32 1 8\n");
@@ -160,19 +159,19 @@ int main(int argc, char* argv[]) {
 	if (ddm::isRoot())
 		n1Thread->update(0, DVM_CORE_NUM * Sim_Iter_Num - 1);
 
-	timeStart = ddm::getCurTime();
+	auto timeStart = chrono::steady_clock::now();
 
 	// Start the DDM Scheduling
 	ddm::run();
 
-	timeFinish = ddm::getCurTime();
+	auto timeFinish = chrono::steady_clock::now();
 
 	delete n1Thread;
 	delete n2Thread;
 
 	//tsu->printStatistics();
 	printf("DDM program finished.\n");
-	timeParallel = timeFinish - timeStart;
+	timeParallel = chrono::duration_cast<chrono::milliseconds>(timeFinish - timeStart).count();
 
 	ddm::finalize();
 	printf("End of finalizing\n");
@@ -187,10 +186,10 @@ int main(int argc, char* argv[]) {
 			printf("Validating results\n");
 			validateData(matrixSize, blockSize, A, B, C, S);
 
-			printf("@@ %f %f\n", timeSerial, timeParallel);
-			printf("speedup: %f\n", timeSerial / timeParallel);
+			std::cout << "@@ " << timeSerial << " " << timeParallel << std::endl;
+			printf("speedup: %f\n", (double) timeSerial / timeParallel);
 		} else {
-			printf("@@ %f\n", timeParallel);
+			std::cout << "@@ " << timeParallel << std::endl;
 		}
 	}
 
@@ -281,9 +280,8 @@ void initializeData(int matrixSize, int blockSize, DATA_TYPE ***A, DATA_TYPE ***
 void validateData(int matrixSize, int blockSize, DATA_TYPE **A, DATA_TYPE **B, DATA_TYPE **C, DATA_TYPE **S) {
 	int blocks = matrixSize / blockSize;
 	int i, b, e, m, j, k;
-	double timeStart, timeFinish;
 
-	timeStart = ddm::getCurTime();
+	auto timeStart = chrono::steady_clock::now();
 
 	for (m = 0; m < blocks * blocks; m++) {
 		i = m / blocks;
@@ -293,9 +291,9 @@ void validateData(int matrixSize, int blockSize, DATA_TYPE **A, DATA_TYPE **B, D
 		}
 	}
 
-	timeFinish = ddm::getCurTime();
+	auto timeFinish = chrono::steady_clock::now();
 
-	timeSerial = timeFinish - timeStart;
+	timeSerial = chrono::duration_cast<chrono::milliseconds>(timeFinish - timeStart).count();;
 
 	for (b = 0; b < blocks * blocks; ++b) {
 		for (e = 0; e < blockSize * blockSize; ++e) {

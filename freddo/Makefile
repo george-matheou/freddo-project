@@ -47,7 +47,7 @@ ARFLAGS			= crs
 ############ The folder that contains the FREDDO libraries
 FREDDO_LIB		= ./$(FREDDO_LIB_NAME)
 
-include_dirs=Algorithm TSU TSU/SM TSU/SM/google Timer Distributed Collections Collections/Matrix Collections/TileMatrix Collections/PTileMatrix
+include_dirs=Algorithm TSU TSU/SM TSU/SM/google Distributed Collections Collections/Matrix Collections/TileMatrix Collections/PTileMatrix
 
 # Export variables to other makefiles
 export

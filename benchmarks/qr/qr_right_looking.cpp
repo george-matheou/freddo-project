@@ -39,6 +39,7 @@
 #include <strings.h>
 #include <freddo/dthreads.h>
 #include <freddo/Collections/TileMatrix/TileMatrix.h>
+#include <chrono>
 
 // If this macro is not defined the TAU array (or T) is not scattered in the root node. We are using this for comparing FREDDO with ScaLAPACK
 #define SCATTER_TAU_IN_ROOT
@@ -84,16 +85,15 @@ MultipleDThread3D* dtssrfbDT;
 //#define DEBUG
 
 // Global Variables
-double serialTime, parallelTime;
+std::chrono::milliseconds::rep serialTime, parallelTime;
 TileMatrix<TYPE> *AP, *TP;
 unsigned int blocks;
 
 // Serial implementation of the Tile QR decomposition
 void serialTileQR(const int MT, const int NT, TileMatrix<TYPE>& A, TileMatrix<TYPE>& T) {
-	double start, finish;
 
 	//Serial calculation
-	start = ddm::getCurTime();
+	auto start = chrono::steady_clock::now();
 	for (int tk = 0; tk < min(MT, NT); tk++) {
 		GEQRT(A(tk, tk), T(tk, tk));
 
@@ -110,9 +110,9 @@ void serialTileQR(const int MT, const int NT, TileMatrix<TYPE>& A, TileMatrix<TY
 			} // j-LOOP END
 		} // i-LOOP END
 	}
-	finish = ddm::getCurTime();
-	serialTime = finish - start;
-	printf("Serial Tile QR time: %f seconds\n", serialTime);
+	auto finish = chrono::steady_clock::now();
+	serialTime = chrono::duration_cast<chrono::milliseconds>(finish - start).count();
+	cout << "Serial Tile QR time: " << serialTime << " milliseconds\n";
 }
 
 void loop_1DT_code(ContextArg kk) { // DThread T1
@@ -282,8 +282,6 @@ void dtssrfbDT_code(Context3DArg context) { // DThread T5
 }
 
 void parallel(int *argc, char ***argv, unsigned int numKernels) {
-	double start, finish;
-
 	freddo_config* conf = new freddo_config();
 	conf->enableTsuPinning();
 	conf->disableNetManagerPinning();
@@ -341,11 +339,11 @@ void parallel(int *argc, char ***argv, unsigned int numKernels) {
 	}
 
 	//cout << "Initial Updates are sent\n";
-	start = ddm::getCurTime();
+	auto start = chrono::steady_clock::now();
 	ddm::run();
-	finish = ddm::getCurTime();
+	auto finish = chrono::steady_clock::now();
 	printf("DDM scheduling done\n");
-	parallelTime = finish - start;
+	parallelTime = chrono::duration_cast<chrono::milliseconds>(finish - start).count();
 	//printf("Parallel Execution Time: %f seconds\n", parallelTime);
 
 	ddm::finalize();
@@ -466,11 +464,11 @@ int main(int argc, char* argv[]) {
 			validateResults(ASerial, TSerial, *AP, *TP);
 			//executeSerialGEQRF(M);
 
-			printf("@@ %f %f\n", serialTime, parallelTime);
-			printf("speedup: %f\n", serialTime / parallelTime);
+			std::cout << "@@ " << serialTime << " " << parallelTime << std::endl;
+			printf("speedup: %f\n", (double) serialTime / parallelTime);
 
 		} else {
-			printf("@@ %f\n", parallelTime);
+			std::cout << "@@ " << parallelTime << std::endl;
 		}
 	}
 

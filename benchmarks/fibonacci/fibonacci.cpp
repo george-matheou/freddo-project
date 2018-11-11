@@ -28,9 +28,9 @@
 #include <string.h>
 #include <iostream>
 #include <pthread.h>
+#include <chrono>
 #include <freddo/recursive_dthreads.h>
 
-using namespace std;
 using namespace ddm;
 
 using DATA_T = long;
@@ -88,9 +88,8 @@ void continuation_code(RInstance context, void* data) {
 /* The main function */
 int main(int argc, char* argv[]) {
 	DATA_T n = 1;
-	time_count t0, t1;
 	DATA_T serial_res = 0;
-	double timeSerial;
+	std::chrono::milliseconds::rep timeSerial;
 	DistRecRes res = { };
 
 	if (argc != 5) {
@@ -127,11 +126,11 @@ int main(int argc, char* argv[]) {
 
 	if (ddm::isRoot())
 		if (run_serial) {
-			t0 = ddm::getCurTime();
+			auto t0 = chrono::steady_clock::now();
 			serial_res = Fibonacci(n);
-			t1 = ddm::getCurTime();
+			auto t1 = chrono::steady_clock::now();
 			cout << "Standard Fibonacci solution: " << serial_res << endl;
-			timeSerial = t1 - t0;
+			timeSerial = chrono::duration_cast<chrono::milliseconds>(t1 - t0).count();
 		}
 
 	if (ddm::isRoot()) {
@@ -142,25 +141,25 @@ int main(int argc, char* argv[]) {
 
 	//cout << "Before run function.\n";
 
-	t0 = ddm::getCurTime();
+	auto t0 = chrono::steady_clock::now();
 	ddm::run();
 	//delete fib_dt;
-	t1 = ddm::getCurTime();
+	auto t1 = chrono::steady_clock::now();
 
 	ddm::finalize();
 
-	double timeParallel = t1 - t0;
+	auto timeParallel = chrono::duration_cast<chrono::milliseconds>(t1 - t0).count();
 
 	if (ddm::isRoot()) {
 		DATA_T ddm_res = res.data->sum_reduction<DATA_T>();
 		cout << "DDM Fibonacci: " << ddm_res << endl;
 
 		if (run_serial) {
-			printf("@@ %f %f\n", timeSerial, timeParallel);
-			printf("speedup: %f\n", timeSerial / timeParallel);
+			std::cout << "@@ " << timeSerial << " " << timeParallel << std::endl;
+			printf("speedup: %f\n", (double) timeSerial / timeParallel);
 			assert(serial_res == ddm_res);
 		} else {
-			printf("@@ %f\n", timeParallel);
+			std::cout << "@@ " << timeParallel << std::endl;
 		}
 	}
 

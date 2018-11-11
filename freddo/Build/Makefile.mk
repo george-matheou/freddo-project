@@ -20,7 +20,6 @@ vpath %.h $(include_dirs) # Specifies a list of directories that make should sea
 
 include ./freddo.mk
 include ./Distributed/dist.mk
-include ./Timer/timer.mk
 include ./TSU/tsu.mk
 include ./Collections/collections.mk
 

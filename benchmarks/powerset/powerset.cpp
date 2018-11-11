@@ -31,8 +31,8 @@
 #include <iostream>
 #include <pthread.h>
 #include <freddo/recursive_dthreads.h>
+#include <chrono>
 
-using namespace std;
 using namespace ddm;
 
 using DATA_T = long;
@@ -111,9 +111,8 @@ void continuation_code(RInstance context, void* data) {
 /* The main function */
 int main(int argc, char* argv[]) {
 	unsigned int n = 1;
-	time_count t0, t1;
 	DATA_T serial_res = 0;
-	double timeSerial;
+	std::chrono::milliseconds::rep timeSerial;
 	DistRecRes res = { };
 
 	if (argc != 5) {
@@ -154,21 +153,21 @@ int main(int argc, char* argv[]) {
 			printf("rootData: %p\n", res.data);
 	}
 
-	t0 = ddm::getCurTime();
+	auto t0 = chrono::steady_clock::now();
 	ddm::run();
-	t1 = ddm::getCurTime();
+	auto t1 = chrono::steady_clock::now();
 
 	ddm::finalize();
 
-	double timeParallel = t1 - t0;
+	auto timeParallel = chrono::duration_cast<chrono::milliseconds>(t1 - t0).count();
 
 	if (ddm::isRoot())
 		if (run_serial) {
-			t0 = ddm::getCurTime();
+			t0 = chrono::steady_clock::now();
 			serial_res = powerset(n, 0) + /* empty set! */1;
-			t1 = ddm::getCurTime();
+			t1 = chrono::steady_clock::now();
 			cout << "Serial solution: " << serial_res << endl;
-			timeSerial = t1 - t0;
+			timeSerial = chrono::duration_cast<chrono::milliseconds>(t1 - t0).count();
 		}
 
 	if (ddm::isRoot()) {
@@ -176,11 +175,11 @@ int main(int argc, char* argv[]) {
 		cout << "DDM Power Set: " << ddm_res << endl;
 
 		if (run_serial) {
-			printf("@@ %f %f\n", timeSerial, timeParallel);
-			printf("speedup: %f\n", timeSerial / timeParallel);
+			std::cout << "@@ " << timeSerial << " " << timeParallel << std::endl;
+			printf("speedup: %f\n", (double) timeSerial / timeParallel);
 			assert(serial_res == ddm_res);
 		} else {
-			printf("@@ %f\n", timeParallel);
+			std::cout << "@@ " << timeParallel << std::endl;
 		}
 	}
 

@@ -32,10 +32,10 @@
 #include <math.h>
 #include <string.h>
 #include <freddo/dthreads.h>
+#include <chrono>
 
 //#define ERR_CHK
 
-using namespace std;
 using namespace ddm;
 
 //Precision to use for calculations
@@ -68,7 +68,7 @@ fptype * volatility;
 fptype * otime;
 int numError = 0;
 int nCores;
-static double timeParallel, timeSerial;
+std::chrono::milliseconds::rep timeParallel, timeSerial;
 bool run_serial;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -312,7 +312,6 @@ int main(int argc, char **argv) {
 	fptype * buffer;
 	int * buffer2;
 	int rv;
-	double timeStart, timeFinish;
 
 	printf("PARSEC Benchmark Suite\n");
 	fflush(NULL);
@@ -429,26 +428,26 @@ int main(int argc, char **argv) {
 	if (ddm::isRoot())
 		dt_solve->update(0, allKernels - 1);
 
-	timeStart = ddm::getCurTime();
+	auto timeStart = chrono::steady_clock::now();
 	ddm::run();
-	timeFinish = ddm::getCurTime();
+	auto timeFinish = chrono::steady_clock::now();
 
 	printf("DDM program finished.\n");
-	timeParallel = timeFinish - timeStart;
+	timeParallel = chrono::duration_cast<chrono::milliseconds>(timeFinish - timeStart).count();
 	ddm::finalize();
 
 	if (ddm::isRoot()) {
 		if (run_serial) {
-			timeStart = ddm::getCurTime();
+			timeStart = chrono::steady_clock::now();
 			bs_serial();
-			timeFinish = ddm::getCurTime();
+			timeFinish = chrono::steady_clock::now();;
 
-			timeSerial = timeFinish - timeStart;
+			timeSerial = chrono::duration_cast<chrono::milliseconds>(timeFinish - timeStart).count();
 
-			printf("@@ %f %f\n", timeSerial, timeParallel);
-			printf("speedup: %f\n", timeSerial / timeParallel);
+			std::cout << "@@ " << timeSerial << " " << timeParallel << std::endl;
+			printf("speedup: %f\n", (double) timeSerial / timeParallel);
 		} else {
-			printf("@@ %f\n", timeParallel);
+			std::cout << "@@ " << timeParallel << std::endl;
 		}
 
 		//Write prices to output file

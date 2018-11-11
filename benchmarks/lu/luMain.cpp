@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <freddo/dthreads.h>
 #include <iostream>
+#include <chrono>
 
 //#define SINGLE_PRECISION
 
@@ -34,7 +35,6 @@
 #endif
 
 using namespace ddm;
-using namespace std;
 
 void diag(DATA_TYPE *diag);
 void down(DATA_TYPE *diag, DATA_TYPE *row);
@@ -50,7 +50,7 @@ static DATA_TYPE ***A;
 static DATA_TYPE *Alin;
 static DATA_TYPE *tmp_A;
 
-static double timeParallel, timeSerial;
+static std::chrono::milliseconds::rep  timeParallel, timeSerial;
 
 void fill_random(DATA_TYPE *tmp, int rows, int cols) {
 	srand(0);
@@ -212,7 +212,6 @@ void comb_thread(Context3DArg context) {
 }
 
 int main(int argc, char* argv[]) {
-	double timeStart, timeFinish;
 
 	if (argc < 4) {
 		printf("arguments: <#Kernels> <MatrixSize> <BlockSize> <Run Serial>\nEg. program 4 1024 32 1\n");
@@ -284,9 +283,9 @@ int main(int argc, char* argv[]) {
 
 	cout << "Multiple Updates sent to TSU\n";
 
-	timeStart = ddm::getCurTime();
+	auto timeStart = chrono::steady_clock::now();
 	ddm::run();
-	timeFinish = ddm::getCurTime();
+	auto timeFinish = chrono::steady_clock::now();
 
 	cout << "DDM scheduling done\n";
 
@@ -296,17 +295,17 @@ int main(int argc, char* argv[]) {
 	delete downDT;
 	delete combDT;
 
-	timeParallel = timeFinish - timeStart;
+	timeParallel = chrono::duration_cast<chrono::milliseconds>( timeFinish - timeStart).count();
 	ddm::finalize();
 
 	if (ddm::isRoot()) {
 		if (run_serial) {
 			execute(matrixSize, blockSize);
 
-			printf("@@ %f %f\n", timeSerial, timeParallel);
-			printf("speedup: %f\n", timeSerial / timeParallel);
+			std::cout << "@@ " << timeSerial << " " << timeParallel << std::endl;
+			printf("speedup: %f\n", (double) timeSerial / timeParallel);
 		} else {
-			printf("@@ %f\n", timeParallel);
+			std::cout << "@@ " << timeParallel << std::endl;
 		}
 	}
 
@@ -321,7 +320,6 @@ void execute(int matrixSize, int blockSize) {
 	int ii, jj, kk;
 	long i, j;
 	int bBreak = 0;
-	double timeStart, timeFinish;
 
 	//Memory allocation and initialization
 	try {
@@ -352,7 +350,7 @@ void execute(int matrixSize, int blockSize) {
 	linear_to_blocked_ptr(blocks, blockSize * blocks, Blin, B, blockSize);
 
 	//Serial calculation
-	timeStart = ddm::getCurTime();
+	auto timeStart = chrono::steady_clock::now();
 	for (kk = 0; kk < blocks; kk++) {
 
 		diag(B[kk][kk]);
@@ -368,9 +366,9 @@ void execute(int matrixSize, int blockSize) {
 				comb(B[ii][kk], B[kk][jj], B[ii][jj]);
 	}
 
-	timeFinish = ddm::getCurTime();
+	auto timeFinish = chrono::steady_clock::now();
 
-	timeSerial = timeFinish - timeStart;
+	timeSerial = chrono::duration_cast<chrono::milliseconds>(timeFinish - timeStart).count();
 
 	//Validation
 	for (i = 0; i < matrixSize; i++) {

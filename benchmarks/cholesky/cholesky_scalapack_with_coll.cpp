@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <chrono>
 #include "lapack/lapack_routines.h"
 
 //#define SINGLE_PRECISION
@@ -47,14 +48,13 @@
 #include <string.h>
 
 using namespace ddm;
-using namespace std;
 
 static unsigned int blocks, blockSize, matrixSize;
 
 // Global Variables
 TileMatrix<TYPE> *A; // Parallel
 
-static double timeSerial;
+static std::chrono::milliseconds::rep timeSerial;
 size_t blockSizeInBytes;
 
 MultipleDThread2D *multAdd_dt;
@@ -200,8 +200,8 @@ void initArray(TileMatrix<TYPE>& tileArray) {
 
 void serial(TileMatrix<TYPE>& B) {
 	unsigned int i, j, k;
-	double dStart, dEnd;
-	dStart = ddm::getCurTime();
+
+	auto dStart = chrono::steady_clock::now();
 	for (j = 0; j < blocks; j++) {
 		//printf("block %d\n", j);
 		for (i = 0; i < j; i++) {
@@ -224,8 +224,8 @@ void serial(TileMatrix<TYPE>& B) {
 			//printf("\ttrsm: %d-%d, %d-%d\n", j, j, i, j);
 		}
 	}
-	dEnd = ddm::getCurTime();
-	timeSerial = dEnd - dStart;
+	auto dEnd = chrono::steady_clock::now();
+	timeSerial = chrono::duration_cast<chrono::milliseconds>(dEnd - dStart).count();
 }
 
 void verifyData() {
@@ -257,7 +257,7 @@ void verifyData() {
 }
 
 int main(int argc, char *argv[]) {
-	double timeStart = 0, timeFinish = 0, timeParallel;
+	std::chrono::milliseconds::rep timeParallel;
 	unsigned int i;
 
 	if (argc < 4) {
@@ -341,13 +341,13 @@ int main(int argc, char *argv[]) {
 
 	cout << "Multiple Updates sent to TSU\n";
 
-	timeStart = ddm::getCurTime();
+	auto timeStart = chrono::steady_clock::now();
 	ddm::run();
-	timeFinish = ddm::getCurTime();
+	auto timeFinish = chrono::steady_clock::now();
 
 	printf("DDM program finished.\n");
 
-	timeParallel = timeFinish - timeStart;
+	timeParallel = chrono::duration_cast<chrono::milliseconds>(timeFinish - timeStart).count();
 
 	ddm::finalize();
 
@@ -364,10 +364,10 @@ int main(int argc, char *argv[]) {
 			//printf("=================================== Serial Result ===================================\n");
 			//printArray(B, blocks, blockSize);
 
-			printf("@@ %f %f\n", timeSerial, timeParallel);
-			printf("speedup: %f\n", timeSerial / timeParallel);
+			std::cout << "@@ " << timeSerial << " " << timeParallel << std::endl;
+			printf("speedup: %f\n", (double) timeSerial / timeParallel);
 		} else {
-			printf("@@ %f\n", timeParallel);
+			std::cout << "@@ " << timeParallel << std::endl;
 		}
 	}
 
