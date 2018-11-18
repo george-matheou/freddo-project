@@ -2,7 +2,7 @@
 
 ### Version 1.2.0
 - Remove inline keyword from functions
-- Remove Timer and use the chrono library
+- Remove Timer and use the chrono library in bechmarks
 
 ### Version 1.1.0
 - Custom Network Interface (CNI) support is deprecated. CNI support is only available in V1.0.0 and V1.0.1 releases.

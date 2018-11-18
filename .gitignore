@@ -24,3 +24,6 @@ benchmarks/swaptions/bin/*
 .project
 .settings/*
 
+benchmarks.tar.gz
+freddo.tar.gz
+
