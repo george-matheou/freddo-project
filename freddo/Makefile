@@ -34,7 +34,7 @@ DEB_FLAGS = #-g
 LIBS_PATHS		=
 LIBS			=
 INCLUDES		=
-EXTRA_OPTIONS 	= -static
+EXTRA_OPTIONS 	= #-static
 CXXFLAGS 		= -Wall -O3 -std=c++11 -pthread $(EXTRA_OPTIONS) $(DEB_FLAGS) $(INCLUDES) $(LIBS_PATHS) $(LIBS)
 ############ Extra flags to give to the C compiler
 CFLAGS     		=

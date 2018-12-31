@@ -65,7 +65,7 @@ typedef unsigned short int 			ReadyCount;  	// The type of the Ready Count attri
 typedef double 						time_count;  	// Indicates a time value
 typedef unsigned int 				UInt;  			// Short name for unsigned integer
 typedef unsigned char 				Byte;  			// The type of one byte
-typedef unsigned char				*MemAddr;  		// The Address of a memory cell
+typedef unsigned char*              MemAddr;  		// The Address of a memory cell
 typedef unsigned int 				AddrID;  		// The type of the IDs of the Addresses
 
 // The type of a Recursive Instance

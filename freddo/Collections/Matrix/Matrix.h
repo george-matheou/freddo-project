@@ -32,7 +32,6 @@
 #include <cassert>
 #include <iomanip> // std::setprecision
 
-using namespace std;
 
 template<class T>
 class Matrix {
@@ -66,8 +65,8 @@ class Matrix {
 
 			try {
 				top_ = new T[m_ * n_];
-			} catch (exception &ex) {
-				cerr << "Can't allocate memory space for Matrix class: " << ex.what() << endl;
+			} catch (std::exception &ex) {
+				std::cerr << "Can't allocate memory space for Matrix class: " << ex.what() << std::endl;
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -85,8 +84,8 @@ class Matrix {
 
 			try {
 				top_ = new T[m_ * n_];
-			} catch (exception &ex) {
-				cerr << "Can't allocate memory space for Matrix class: " << ex.what() << endl;
+			} catch (std::exception &ex) {
+				std::cerr << "Can't allocate memory space for Matrix class: " << ex.what() << std::endl;
 				exit(EXIT_FAILURE);
 			}
 
@@ -121,9 +120,9 @@ class Matrix {
 		void showAll() const {
 			for (size_t i = 0; i < m_; i++) {
 				for (size_t j = 0; j < n_; j++) {
-					cout << top_[i + j * m_] << " ";
+					std::cout << top_[i + j * m_] << " ";
 				}
-				cout << endl;
+				std::cout << std::endl;
 			}
 		}
 
@@ -135,9 +134,9 @@ class Matrix {
 		void showAll(int precision, int width) const {
 			for (size_t i = 0; i < m_; i++) {
 				for (size_t j = 0; j < n_; j++) {
-					cout << std::setw(width) << std::setprecision(precision) << top_[i + j * m_] << " ";
+					std::cout << std::setw(width) << std::setprecision(precision) << top_[i + j * m_] << " ";
 				}
-				cout << endl;
+				std::cout << std::endl;
 			}
 		}
 
@@ -233,7 +232,7 @@ class Matrix {
 		 * @param fname data file name
 		 */
 		void fileOut(const char* fname) {
-			ofstream matf(fname);
+			std::ofstream matf(fname);
 			if (!matf) {
 				std::cerr << "Unable to open " << fname << std::endl;
 				exit(1);
@@ -257,7 +256,7 @@ class Matrix {
 		 * @param dig number of output digit
 		 */
 		void fileOut(const char* fname, const unsigned dig) {
-			ofstream matf(fname);
+			std::ofstream matf(fname);
 			if (!matf) {
 				std::cerr << "Unable to open " << fname << std::endl;
 				exit(1);

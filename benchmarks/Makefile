@@ -22,7 +22,7 @@ SCALAPACK_LIB_DIR	=/home/geomat/scalapack/lib
 LAPACK_DIR			=/home/geomat/scalapack/lapack-3.6.1
 LAPACK_INCLUDES		=-I$(LAPACK_DIR)/CBLAS/include -I$(LAPACK_DIR)/LAPACKE/include -I$(FREDDO_INC_DIR)
 LAPACK_LIBS_PATHS	=-L$(LAPACK_DIR) -L$(LAPACK_DIR)/lib -L$(FREDDO_LIB_DIR)
-LAPACK_LIBS			=-llapacke  -llapack -lcblas -lblas -lgfortran -lm
+LAPACK_LIBS			=-llapacke -llapack -lcblas -lblas -lgfortran -lm
 
 ## Plasma paths and libraries
 PLASMA_DIR 			=/home/geomat/plasma

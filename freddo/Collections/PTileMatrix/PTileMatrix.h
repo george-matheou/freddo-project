@@ -33,8 +33,6 @@
 #include <iomanip>
 #include <stdio.h>
 
-using namespace std;
-
 typedef enum {
 	MAPPING_NODE_BASED = 0,
 	MAPPING_KERNEL_BASED
@@ -99,8 +97,8 @@ class PTileMatrix {
 			try {
 				top_ = new T*[mt_ * nt_];
 			}
-			catch (exception& ex) {
-				cerr << "Can't allocate memory space for PTileMatrix class: " << ex.what() << endl;
+			catch (std::exception& ex) {
+				std::cerr << "Can't allocate memory space for PTileMatrix class: " << ex.what() << std::endl;
 				exit(EXIT_FAILURE);
 			}
 
@@ -112,8 +110,8 @@ class PTileMatrix {
 						else
 							top_[i + j * mt_] = nullptr;
 					}
-					catch (exception& ex) {
-						cerr << "Can't allocate memory space for PTileMatrix class: " << ex.what() << endl;
+					catch (std::exception& ex) {
+						std::cerr << "Can't allocate memory space for PTileMatrix class: " << ex.what() << std::endl;
 						exit(EXIT_FAILURE);
 					}
 				}
@@ -262,12 +260,12 @@ class PTileMatrix {
 		 * Prints information about the Matrix
 		 */
 		void printInfo() {
-			cout << "PTile Matrix Information: \n";
-			cout << "Number of nodes: " << numOfNodes_ << " (" << peerID_ << " id)" << endl;
-			cout << "Number of all Kernels: " << numAllKernels_ << endl;
-			cout << "\t-> Matrix Size: " << M_ << " x " << N_ << endl;
-			cout << "\t-> Tile Size: " << mb_ << " x " << nb_ << endl;
-			cout << "\t-> Tiled Matrix Size: " << mt_ << " x " << nt_ << endl;
+			std::cout << "PTile Matrix Information: \n";
+			std::cout << "Number of nodes: " << numOfNodes_ << " (" << peerID_ << " id)" << std::endl;
+			std::cout << "Number of all Kernels: " << numAllKernels_ << std::endl;
+			std::cout << "\t-> Matrix Size: " << M_ << " x " << N_ << std::endl;
+			std::cout << "\t-> Tile Size: " << mb_ << " x " << nb_ << std::endl;
+			std::cout << "\t-> Tiled Matrix Size: " << mt_ << " x " << nt_ << std::endl;
 		}
 
 		/**
@@ -285,13 +283,13 @@ class PTileMatrix {
 					size_t j = J % nb_;
 
 					if (top_[ti + tj * mt_] != nullptr)
-						cout << top_[ti + tj * mt_]->operator ()(i, j) << " ";
+						std::cout << top_[ti + tj * mt_]->operator ()(i, j) << " ";
 					else
-						cout << "x ";
+						std::cout << "x ";
 
 					//cout << setw(6) << setprecision(3) << top_[ti + tj * mt_]->operator ()(i, j) << " ";
 				}
-				cout << "\n";
+				std::cout << "\n";
 			}
 		}
 
@@ -310,11 +308,11 @@ class PTileMatrix {
 					size_t j = J % nb_;
 
 					if (top_[ti + tj * mt_] != nullptr)
-						cout << std::fixed << setw(width) << setprecision(precision) << getTileVal(ti, tj, i, j) << " ";
+						std::cout << std::fixed << std::setw(width) << std::setprecision(precision) << getTileVal(ti, tj, i, j) << " ";
 					else
-						cout << std::fixed << setw(width) << setprecision(precision) << "x ";
+						std::cout << std::fixed << std::setw(width) << std::setprecision(precision) << "x ";
 				}
-				cout << "\n";
+				std::cout << "\n";
 			}
 		}
 

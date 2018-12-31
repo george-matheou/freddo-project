@@ -31,8 +31,6 @@
 #include <cassert>
 #include "../Matrix/Matrix.h"
 
-using namespace std;
-
 template<class T>
 class BMatrix: public Matrix<T> {
 

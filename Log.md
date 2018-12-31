@@ -15,7 +15,3 @@
 
 ### Version 1.0.0
 First release of FREDDO. It utilizes two different network interfaces for inter-node communication: *Custom Network Interface (CNI)* and *MPI*. CNI is an optimized implementation with TCP sockets and implements a fully connected mesh of inter-node connections (i.e., each node maintains a connection to all other nodes). CNI supports only Ethernet-based interconnects. The major benefits of providing MPI support are portability and flexibility.
-
-
-
-

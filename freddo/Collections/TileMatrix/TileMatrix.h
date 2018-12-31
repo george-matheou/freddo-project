@@ -34,8 +34,6 @@
 #include <stdio.h>
 #include "BMatrix.h"
 
-using namespace std;
-
 template <class T>
 class TileMatrix {
 
@@ -82,8 +80,8 @@ class TileMatrix {
 			try {
 				top_ = new BMatrix<T>*[mt_ * nt_];
 			}
-			catch (exception& ex) {
-				cerr << "Can't allocate memory space for TileMatrix class: " << ex.what() << endl;
+			catch (std::exception& ex) {
+				std::cerr << "Can't allocate memory space for TileMatrix class: " << ex.what() << std::endl;
 				exit(EXIT_FAILURE);
 			}
 
@@ -96,8 +94,8 @@ class TileMatrix {
 						//cout << "Address of tile " << i << "," << j << ": " << (void*) top_[i + j * mt_] << endl;
 						//cout << "Address of data of tile " << i << "," << j << ": " << (void*) top_[i + j * mt_]->top() << endl;
 					}
-					catch (exception& ex) {
-						cerr << "Can't allocate memory space for TileMatrix class: " << ex.what() << endl;
+					catch (std::exception& ex) {
+						std::cerr << "Can't allocate memory space for TileMatrix class: " << ex.what() << std::endl;
 						exit(EXIT_FAILURE);
 					}
 				}
@@ -124,8 +122,8 @@ class TileMatrix {
 			try {
 				top_ = new BMatrix<T>*[mt_ * nt_];
 			}
-			catch (exception& ex) {
-				cerr << "Can't allocate memory space for TMatrix class: " << ex.what() << endl;
+			catch (std::exception& ex) {
+				std::cerr << "Can't allocate memory space for TMatrix class: " << ex.what() << std::endl;
 				exit(EXIT_FAILURE);
 			}
 
@@ -136,8 +134,8 @@ class TileMatrix {
 					try {
 						top_[i + j * mt_] = new BMatrix<T>(tm, tn, ib);
 					}
-					catch (exception& ex) {
-						cerr << "Can't allocate memory space for TMatrix class: " << ex.what() << endl;
+					catch (std::exception& ex) {
+						std::cerr << "Can't allocate memory space for TMatrix class: " << ex.what() << std::endl;
 						exit(EXIT_FAILURE);
 					}
 
@@ -292,10 +290,10 @@ class TileMatrix {
 		 * Prints information about the Matrix
 		 */
 		void printInfo() {
-			cout << "Tile Matrix Information: \n";
-			cout << "\t-> Matrix Size: " << M_ << " x " << N_ << endl;
-			cout << "\t-> Tile Size: " << mb_ << " x " << nb_ << endl;
-			cout << "\t-> Tiled Matrix Size: " << mt_ << " x " << nt_ << endl;
+			std::cout << "Tile Matrix Information: \n";
+			std::cout << "\t-> Matrix Size: " << M_ << " x " << N_ << std::endl;
+			std::cout << "\t-> Tile Size: " << mb_ << " x " << nb_ << std::endl;
+			std::cout << "\t-> Tiled Matrix Size: " << mt_ << " x " << nt_ << std::endl;
 		}
 
 		/**
@@ -311,11 +309,11 @@ class TileMatrix {
 					// (i,j) : Index of the tile elements
 					size_t i = m % mb_;
 					size_t j = J % nb_;
-					cout << top_[ti + tj * mt_]->operator ()(i, j) << " ";
+					std::cout << top_[ti + tj * mt_]->operator ()(i, j) << " ";
 
 					//cout << setw(6) << setprecision(3) << top_[ti + tj * mt_]->operator ()(i, j) << " ";
 				}
-				cout << "\n";
+				std::cout << "\n";
 			}
 		}
 
@@ -332,9 +330,9 @@ class TileMatrix {
 					// (i,j) : Index of the tile elements
 					size_t i = m % mb_;
 					size_t j = J % nb_;
-					cout << std::fixed << setw(width) << setprecision(precision) << top_[ti + tj * mt_]->operator ()(i, j) << " ";
+					std::cout << std::fixed << std::setw(width) << std::setprecision(precision) << top_[ti + tj * mt_]->operator ()(i, j) << " ";
 				}
-				cout << "\n";
+				std::cout << "\n";
 			}
 		}
 

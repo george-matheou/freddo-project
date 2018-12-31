@@ -28,9 +28,6 @@
 #ifndef ERROR_H_
 #define ERROR_H_
 
-// Includes
-#include "ddm_defs.h"
-
 #define ERROR -1
 #define OK 0
 
